@@ -35,7 +35,7 @@ open class IMGLYResponseFilter: CIFilter, IMGLYFilterTypeProtocol {
             colorCubeData = nil
         }
     }
-    open let responseName: String
+    public let responseName: String
 
     /// Returns the according filter type of the response filter.
     open var filterType: IMGLYFilterType {

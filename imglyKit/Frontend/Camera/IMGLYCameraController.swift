@@ -87,11 +87,11 @@ open class IMGLYCameraController: NSObject {
     
     /// The response filter that is applied to the live-feed.
     open var effectFilter: IMGLYResponseFilter = IMGLYNoneFilter()
-    open let previewView: UIView
-    open var previewContentMode: UIViewContentMode  = .scaleAspectFit
+    public let previewView: UIView
+    open var previewContentMode: UIView.ContentMode  = .scaleAspectFit
 
     open weak var delegate: IMGLYCameraControllerDelegate?
-    open let tapGestureRecognizer = UITapGestureRecognizer()
+    public let tapGestureRecognizer = UITapGestureRecognizer()
     
     @objc dynamic fileprivate let session = AVCaptureSession()
     fileprivate let sessionQueue = DispatchQueue(label: "capture_session_queue", attributes: [])
@@ -389,6 +389,8 @@ open class IMGLYCameraController: NSObject {
                     nextFlashMode = .on
                 }
             }
+        default:
+            break
         }
         
         flashMode = nextFlashMode
@@ -457,6 +459,8 @@ open class IMGLYCameraController: NSObject {
                     nextTorchMode = .on
                 }
             }
+        default:
+            break
         }
         
         torchMode = nextTorchMode
@@ -712,7 +716,7 @@ open class IMGLYCameraController: NSObject {
         videoPreviewView!.frame = previewView.bounds
         
         previewView.addSubview(videoPreviewView!)
-        previewView.sendSubview(toBack: videoPreviewView!)
+        previewView.sendSubviewToBack(videoPreviewView!)
         
         ciContext = CIContext(eaglContext: glContext)
         videoPreviewView!.bindDrawable()
@@ -1400,7 +1404,7 @@ extension IMGLYCameraController: AVCaptureVideoDataOutputSampleBufferDelegate, A
 }
 
 extension CGRect {
-    mutating func fittedIntoTargetRect(_ targetRect: CGRect, withContentMode contentMode: UIViewContentMode) {
+    mutating func fittedIntoTargetRect(_ targetRect: CGRect, withContentMode contentMode: UIView.ContentMode) {
         if !(contentMode == .scaleAspectFit || contentMode == .scaleAspectFill) {
             // Not implemented
             return
@@ -1444,6 +1448,8 @@ private func GetTransformForDeviceOrientation(_ orientation: AVCaptureVideoOrien
         result = mirrored ? CGAffineTransform(rotationAngle: CGFloat.pi) : CGAffineTransform.identity
     case .landscapeLeft:
         result = mirrored ? CGAffineTransform.identity : CGAffineTransform(rotationAngle: CGFloat.pi)
+    default:
+        result = .identity
     }
     
     return result

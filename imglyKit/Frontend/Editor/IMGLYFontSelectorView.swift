@@ -36,14 +36,14 @@ open class IMGLYFontSelectorView: UIScrollView {
     
     fileprivate func configureFontButtons() {
         for fontName in fontNames {
-            let button = UIButton(type: UIButtonType.custom)
-            button.setTitle(fontName, for:UIControlState())
-            button.contentHorizontalAlignment = UIControlContentHorizontalAlignment.center
+            let button = UIButton(type: .custom)
+            button.setTitle(fontName, for: [])
+            button.contentHorizontalAlignment = .center
             
             if let font = UIFont(name: fontName, size: kFontSize) {
                 button.titleLabel?.font = font
                 addSubview(button)
-                button.addTarget(self, action: #selector(IMGLYFontSelectorView.buttonTouchedUpInside(_:)), for: UIControlEvents.touchUpInside)
+                button.addTarget(self, action: #selector(IMGLYFontSelectorView.buttonTouchedUpInside(_:)), for: .touchUpInside)
             }
         }
     }

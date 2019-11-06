@@ -34,13 +34,13 @@ extension Timer {
     
     class func after(_ interval: TimeInterval, _ block: @escaping () -> ()) -> Timer {
         let timer = Timer.new(after: interval, block)
-        RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+        RunLoop.current.add(timer, forMode: .default)
         return timer
     }
     
     class func after(_ interval: TimeInterval, repeats: Bool, _ block: @escaping () -> ()) -> Timer {
         let timer = Timer.new(after: interval, repeats: repeats, block)
-        RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+        RunLoop.current.add(timer, forMode: .default)
         return timer
     }
 }

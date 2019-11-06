@@ -14,7 +14,7 @@ open class IMGLYAnimationDelegate: NSObject, CAAnimationDelegate {
     
     // MARK: - Properties
     
-    open let block: IMGLYAnimationDelegateBlock
+    public let block: IMGLYAnimationDelegateBlock
     
     // MARK: - Initializers
     

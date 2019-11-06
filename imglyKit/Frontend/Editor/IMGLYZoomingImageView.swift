@@ -60,7 +60,7 @@ open class IMGLYZoomingImageView: UIScrollView {
         showsVerticalScrollIndicator = false
         maximumZoomScale = 2
         scrollsToTop = false
-        decelerationRate = UIScrollViewDecelerationRateFast
+        decelerationRate = .fast
         isExclusiveTouch = true
         delegate = self
     }

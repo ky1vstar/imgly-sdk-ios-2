@@ -148,7 +148,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         case .began:
             draggedView = stickersClipView.hitTest(location, with: nil) as? UIImageView
             if let draggedView = draggedView {
-                stickersClipView.bringSubview(toFront: draggedView)
+                stickersClipView.bringSubviewToFront(draggedView)
             }
         case .changed:
             if let draggedView = draggedView {
@@ -177,7 +177,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
                 }
                 
                 if let draggedView = draggedView {
-                    stickersClipView.bringSubview(toFront: draggedView)
+                    stickersClipView.bringSubviewToFront(draggedView)
                 }
             case .changed:
                 if let draggedView = draggedView {
@@ -207,7 +207,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
                 }
                 
                 if let draggedView = draggedView {
-                    stickersClipView.bringSubview(toFront: draggedView)
+                    stickersClipView.bringSubviewToFront(draggedView)
                 }
             case .changed:
                 if let draggedView = draggedView {

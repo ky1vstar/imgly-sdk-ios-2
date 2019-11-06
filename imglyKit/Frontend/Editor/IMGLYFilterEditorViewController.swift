@@ -12,7 +12,7 @@ open class IMGLYFilterEditorViewController: IMGLYSubEditorViewController {
     
     // MARK: - Properties
     
-    open let filterSelectionController = IMGLYFilterSelectionController()
+    public let filterSelectionController = IMGLYFilterSelectionController()
     
     open fileprivate(set) lazy var filterIntensitySlider: UISlider = {
         let bundle = Bundle(for: type(of: self))
@@ -27,7 +27,7 @@ open class IMGLYFilterEditorViewController: IMGLYSubEditorViewController {
         slider.minimumTrackTintColor = UIColor.white
         slider.maximumTrackTintColor = UIColor.white
         let sliderThumbImage = UIImage(named: "slider_thumb_image", in: bundle, compatibleWith: nil)
-        slider.setThumbImage(sliderThumbImage, for: UIControlState())
+        slider.setThumbImage(sliderThumbImage, for: [])
         slider.setThumbImage(sliderThumbImage, for: .highlighted)
         
         return slider
@@ -91,8 +91,8 @@ open class IMGLYFilterEditorViewController: IMGLYSubEditorViewController {
         
         let views = [ "filterSelectionView" : filterSelectionController.view! ]
         
-        addChildViewController(filterSelectionController)
-        filterSelectionController.didMove(toParentViewController: self)
+        addChild(filterSelectionController)
+        filterSelectionController.didMove(toParent: self)
         bottomContainerView.addSubview(filterSelectionController.view)
         
         bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[filterSelectionView]|", options: [], metrics: nil, views: views))

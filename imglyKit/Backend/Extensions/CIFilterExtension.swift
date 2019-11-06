@@ -17,7 +17,7 @@ import QuartzCore
 private var displayNameAssociationKey: UInt8 = 0
 
 public extension CIFilter {
-    public var imgly_displayName: String? {
+    var imgly_displayName: String? {
         get {
             return objc_getAssociatedObject(self, &displayNameAssociationKey) as? String
         }

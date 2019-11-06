@@ -13,7 +13,7 @@ public protocol IMGLYStickersDataSourceDelegate: class, UICollectionViewDataSour
 }
 
 open class IMGLYStickersDataSource: NSObject, IMGLYStickersDataSourceDelegate {
-    open let stickers: [IMGLYSticker]
+    public let stickers: [IMGLYSticker]
     
     override init() {
         let stickerFiles = [

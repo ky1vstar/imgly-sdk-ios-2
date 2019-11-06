@@ -46,7 +46,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
         textField.text = ""
         textField.textColor = self.textColor
         textField.clipsToBounds = false
-        textField.contentVerticalAlignment = UIControlContentVerticalAlignment.center
+        textField.contentVerticalAlignment = .center
         textField.returnKeyType = UIReturnKeyType.done
         return textField
         }()
@@ -165,7 +165,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
     }
     
     fileprivate func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(IMGLYTextEditorViewController.keyboardWillChangeFrame(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IMGLYTextEditorViewController.keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     fileprivate func configureGestureRecognizers() {
@@ -217,7 +217,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
     // MARK: - Notification Handling
     
     @objc fileprivate func keyboardWillChangeFrame(_ notification: Notification) {
-        if let frameValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+        if let frameValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardFrame = view.convert(frameValue.cgRectValue, from: nil)
             textField.frame = CGRect(x: 0, y: view.frame.size.height - keyboardFrame.size.height - TextFieldHeight, width: view.frame.size.width, height: TextFieldHeight)
         }
@@ -246,7 +246,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
                 repeat {
                     currentTextSize += 1.0
                     let font = UIFont(name: fontName, size: currentTextSize)
-                    size = text.size(withAttributes: [ NSAttributedStringKey.font: font as AnyObject ])
+                    size = text.size(withAttributes: [ NSAttributedString.Key.font: font as AnyObject ])
                 } while (size.width < (view.frame.size.width - TextLabelInitialMargin))
             }
         }
@@ -261,7 +261,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
                 repeat {
                     maximumFontSize += 1.0
                     let font = UIFont(name: fontName, size: maximumFontSize)
-                    size = text.size(withAttributes: [ NSAttributedStringKey.font: font as AnyObject ])
+                    size = text.size(withAttributes: [ NSAttributedString.Key.font: font as AnyObject ])
                 } while (size.width < self.view.frame.size.width)
             }
         }
