@@ -444,7 +444,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
     
     fileprivate func calculateDragOffsetOnNewDrag(recognizer: UIPanGestureRecognizer) {
         let location = recognizer.location(in: transparentRectView)
-        if recognizer.state == UIGestureRecognizerState.began {
+        if recognizer.state == .began {
             dragOffset = CGPoint(x: location.x - cropRectComponent.cropRect.origin.x, y: location.y - cropRectComponent.cropRect.origin.y)
         }
     }

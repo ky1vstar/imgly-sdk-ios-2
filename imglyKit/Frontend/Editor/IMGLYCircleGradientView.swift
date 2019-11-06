@@ -118,12 +118,12 @@ open class IMGLYCircleGradientView : UIView {
     }
     
     open func informDeletageAboutRecognizerStates(recognizer: UIGestureRecognizer) {
-        if recognizer.state == UIGestureRecognizerState.began {
+        if recognizer.state == .began {
             if gradientViewDelegate != nil {
                 gradientViewDelegate!.userInteractionStarted()
             }
         }
-        if recognizer.state == UIGestureRecognizerState.ended {
+        if recognizer.state == .ended {
             if gradientViewDelegate != nil {
                 gradientViewDelegate!.userInteractionEnded()
             }

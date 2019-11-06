@@ -12,7 +12,7 @@ class IMGLYShapeLayer: CAShapeLayer {
     override func action(forKey event: String) -> CAAction? {
         if event == "path" {
             let animation = CABasicAnimation(keyPath: event)
-            animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+            animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
             return animation
         }
         

@@ -63,7 +63,7 @@ open class IMGLYCropRectComponent {
         let path = UIBezierPath(rect: cropRect)
         path.append(UIBezierPath(rect: bounds))
         maskLayer.path = path.cgPath
-        maskLayer.fillRule = kCAFillRuleEvenOdd
+        maskLayer.fillRule = .evenOdd
         
        transparentView_!.layer.mask = maskLayer
     }
@@ -78,7 +78,7 @@ open class IMGLYCropRectComponent {
     
     fileprivate func createAnchorWithImage(_ image:UIImage?) -> UIImageView {
         let anchor = UIImageView(image: image!)
-        anchor.contentMode = UIViewContentMode.center
+        anchor.contentMode = .center
         anchor.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         anchor.isHidden = true
         transparentView_!.addSubview(anchor)

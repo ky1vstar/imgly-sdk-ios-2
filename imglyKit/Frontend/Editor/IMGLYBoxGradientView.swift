@@ -167,13 +167,13 @@ open class IMGLYBoxGradientView : UIView {
     }
     
     open func informDeletageAboutRecognizerStates(recognizer: UIGestureRecognizer) {
-        if recognizer.state == UIGestureRecognizerState.began {
+        if recognizer.state == .began {
             if gradientViewDelegate != nil {
                 gradientViewDelegate!.userInteractionStarted()
             }
         }
-        if recognizer.state == UIGestureRecognizerState.ended ||
-            recognizer.state == UIGestureRecognizerState.cancelled {
+        if recognizer.state == .ended ||
+            recognizer.state == .cancelled {
                 if gradientViewDelegate != nil {
                     gradientViewDelegate!.userInteractionEnded()
                 }

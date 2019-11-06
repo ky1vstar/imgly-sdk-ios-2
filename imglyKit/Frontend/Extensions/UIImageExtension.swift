@@ -14,7 +14,7 @@ Adds framework-related methods to `UIImage`.
 */
 public extension UIImage {
     /// Returns a copy of the image, taking into account its orientation
-    public var imgly_normalizedImage: UIImage {
+    var imgly_normalizedImage: UIImage {
         if imageOrientation == .up {
             return self
         }
@@ -31,7 +31,7 @@ public extension UIImage {
     
     :discussion: The image will be scaled disproportionately if necessary to fit the bounds specified by the parameter.
     */
-    public func imgly_normalizedImageOfSize(_ size: CGSize) -> UIImage {
+    func imgly_normalizedImageOfSize(_ size: CGSize) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         draw(in: CGRect(origin: CGPoint.zero, size: size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -40,7 +40,7 @@ public extension UIImage {
     }
 }
 
-extension UIImageOrientation: CustomStringConvertible {
+extension UIImage.Orientation: CustomStringConvertible {
     public var description: String {
         switch self {
         case .up: return "Up"
@@ -51,6 +51,7 @@ extension UIImageOrientation: CustomStringConvertible {
         case .downMirrored: return "DownMirrored"
         case .leftMirrored: return "LeftMirrored"
         case .rightMirrored: return "RightMirrored"
+        default: return "Unknown"
         }
     }
 }

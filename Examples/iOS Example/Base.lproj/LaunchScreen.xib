@@ -1,7 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -21,7 +26,7 @@
                                 <constraint firstAttribute="width" constant="50" id="m0r-TC-jKC"/>
                             </constraints>
                             <state key="normal" image="flash_auto">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <variation key="default">
                                 <mask key="constraints">
@@ -36,11 +41,11 @@
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="43Q-tl-oGa"/>
                             </constraints>
                             <state key="normal" image="cam_switch">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="u37-al-tSw" secondAttribute="bottom" id="JUi-l7-Qw4"/>
                         <constraint firstAttribute="trailing" secondItem="Aom-Pc-t2h" secondAttribute="trailing" constant="20" id="Uo3-Lm-ile"/>
@@ -61,14 +66,11 @@
                                 <constraint firstAttribute="height" constant="70" id="AI4-rq-T97"/>
                             </constraints>
                             <state key="normal" image="LensAperture_ShapeLayer_00000">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
-                            <variation key="heightClass=regular" misplaced="YES">
-                                <rect key="frame" x="413" y="35" width="63" height="30"/>
-                            </variation>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="centerY" secondItem="pxN-YW-m5t" secondAttribute="centerY" id="Vbf-Dz-wnp"/>
                         <constraint firstAttribute="height" constant="100" id="g9y-7i-JKc"/>
@@ -76,7 +78,7 @@
                     </constraints>
                 </view>
             </subviews>
-            <color key="backgroundColor" white="0.1319901316" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.13199013471603394" green="0.13199013471603394" blue="0.13199013471603394" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="am7-3j-HZn" firstAttribute="leading" secondItem="6OH-Go-v3X" secondAttribute="leading" id="IiH-o0-aA0"/>
                 <constraint firstAttribute="trailing" secondItem="wHV-ll-sGQ" secondAttribute="trailing" id="VLs-KM-OSI"/>

@@ -73,7 +73,7 @@ open class IMGLYTextFilter : CIFilter {
         UIRectFill(CGRect(origin: CGPoint(), size: imageSize))
         
         let font = UIFont(name: fontName, size: fontScaleFactor * imageSize.height)
-        text.draw(in: CGRect(x: frame.origin.x * imageSize.width, y: frame.origin.y * imageSize.height, width: frame.size.width * imageSize.width, height: frame.size.height * imageSize.width), withAttributes: [NSAttributedStringKey.font: font!, NSAttributedStringKey.foregroundColor: color])
+        text.draw(in: CGRect(x: frame.origin.x * imageSize.width, y: frame.origin.y * imageSize.height, width: frame.size.width * imageSize.width, height: frame.size.height * imageSize.width), withAttributes: [NSAttributedString.Key.font: font!, NSAttributedString.Key.foregroundColor: color])
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -92,7 +92,7 @@ open class IMGLYTextFilter : CIFilter {
         NSColor(white: 1, alpha: 0).setFill()
         CGRect(origin: CGPoint(), size: imageSize).fill()
         let font = NSFont(name: fontName, size: fontScaleFactor * imageSize.height)
-        text.draw(in: CGRect(x: frame.origin.x * imageSize.width, y: frame.origin.y * imageSize.height, width: frame.size.width * imageSize.width, height: frame.size.height * imageSize.width), withAttributes: [NSAttributedStringKey.font: font!, NSAttributedStringKey.foregroundColor: color])
+        text.draw(in: CGRect(x: frame.origin.x * imageSize.width, y: frame.origin.y * imageSize.height, width: frame.size.width * imageSize.width, height: frame.size.height * imageSize.width), withAttributes: [NSAttributedString.Key.font: font!, NSAttributedString.Key.foregroundColor: color])
     
         image.unlockFocus()
         

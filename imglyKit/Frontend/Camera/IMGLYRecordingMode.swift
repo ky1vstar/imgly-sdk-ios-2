@@ -31,7 +31,7 @@ import MobileCoreServices
     var selectionButton: UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(titleForSelectionButton, for: UIControlState())
+        button.setTitle(titleForSelectionButton, for: [])
         button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         button.setTitleColor(UIColor(red:1, green:0.8, blue:0, alpha:1), for: .selected)
         return button
@@ -42,7 +42,7 @@ import MobileCoreServices
         case .photo:
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.setImage(UIImage(named: "LensAperture_ShapeLayer_00000", in: bundle, compatibleWith: nil), for: UIControlState())
+            button.setImage(UIImage(named: "LensAperture_ShapeLayer_00000", in: bundle, compatibleWith: nil), for: [])
             button.imageView?.animationImages = [UIImage]()
             button.imageView?.animationRepeatCount = 1
             button.adjustsImageWhenHighlighted = false

@@ -15,7 +15,7 @@ open class IMGLYSubEditorViewController: IMGLYEditorViewController {
     
     // MARK: - Properties
     
-    open let fixedFilterStack: IMGLYFixedFilterStack
+    public let fixedFilterStack: IMGLYFixedFilterStack
     open var completionHandler: IMGLYSubEditorCompletionBlock?
     
     // MARK: - Initializers
