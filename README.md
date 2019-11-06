@@ -4,24 +4,29 @@
 
 This project was [originally](https://github.com/chenzeyu/imgly-sdk-ios) created by [@9elements](https://twitter.com/9elements). Since it was compatible only with Swift 2 I've decided to convert it to modern Swift syntax and share it with you.
 
+| imglyKit2 version | Swift version |
+|:-----------------:|:-----------------:|
+| 1.1.0 | 5 |
+| 1.0.0 | 4 |
+
 ## img.ly SDK for iOS
 
 img.ly SDK for iOS is a Cocoa Touch framework for creating stunning images with a nice selection of premium filters.
 
 ### Overview
 
-img.ly SDK provides tools for creating photo applications for iOS with a big variety of filters that can be previewed in real-time. Unlike other apps that allow a live preview of filters, the img.ly SDK even provides a live preview when using high-resolution images. Version 2.0 removes any resolution limits, is written in Swift and allows for easy customization.
+img.ly SDK provides tools for creating photo applications for iOS with a big variety of filters that can be previewed in real-time. Unlike other apps that allow a live preview of filters, the img.ly SDK even provides a live preview when using high-resolution images.
 
 ### Features
 
 * 40 stunning build in filters to choose from.
 * Open source, need anything? Want to change anything? Go ahead, we provide the full source code.
 * Native code. Our backend is Core Image based, therefore we dodge all the nasty OpenGL problems other frameworks face. Also its easier to add new filters. Just derive from `CIFilter` override the `outputImage` property and you are good to go.
-* iPad support. Since version two uses auto layout, it's easy to compile your app for iPhone and iPad. No more ugly nested iPhone app on your iPad.
+* iPad support.
 * Design filters in photoshop! Before you had to tweak values in code or copy & paste them from photoshop or your favorite image editor. With our response technology that is a thing of the past. Design your filter in photoshop, once you are done apply it onto the provided identity image. That will 'record' the filter response. Save it, add it as new filter, done!
 * Swift. Keeping up with time, we used Swift to code the img.ly SDK, leading to leaner easier code.
-* Live preview, as with version one, filters can be previewed in the camera preview.
-* Low memory footprint, with version two we were able to reduce the memory footprint massively.
+* Filters can be previewed in the camera preview.
+* Low memory footprint.
 * Non-destructive. Don't like what you did? No problem, just redo or even discard it.
 * In addition to adding beautiful filters to your photos, you can now also record videos and add the same filters.
 
@@ -29,8 +34,8 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 ## Requirements
 
-* Xcode 9.0
-* Swift 4.0
+* Xcode 10.0
+* Swift 5.0
 * iOS 8.0+
 * macOS 10.10+
 
@@ -38,20 +43,13 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 ### CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
-
-CocoaPods 0.36 added support for Swift and embedded frameworks (more information about this is available [here](http://blog.cocoapods.org/CocoaPods-0.36/)). You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-To integrate imglyKit into your Xcode project using CocoaPods, specify it in your `Podfile`:
+To integrate imglyKit into your Xcode project using [CocoaPods](http://cocoapods.org), specify it in your `Podfile`:
 
 ```ruby
 use_frameworks!
 
-pod 'imglyKit2'
+pod 'imglyKit2', '~> 1.1' # Swift 5
+pod 'imglyKit2', '=> 1.0.0' # Swift 4
 ```
 
 Then, run the following command:
@@ -62,16 +60,7 @@ $ pod install
 
 ### Carthage
 
-Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate imglyKit into your Xcode project using Carthage, specify it in your `Cartfile`:
+To integrate imglyKit into your Xcode project using [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
 
 ```ogdl
 github "ky1vstar/imgly-sdk-ios-2"
@@ -102,20 +91,20 @@ We strongly recommend that you use any of the methods described above for instal
 
 1. Drop all the files within the [imglyKit directory](https://github.com/ky1vstar/imgly-sdk-ios-2/tree/master/imglyKit) except for `imglyKit.h` and `Info.plist` into your Xcode project.
 2. Create a bridging header (File > New > File > iOS > Source > Header File) and name it by your product module name followed by "-Bridging-Header.h" (e.g. "ExampleApp-Bridging-Header.h"). Add these lines to the header: 
-		
-		#import "LUTToNSDataConverter.h"
-		
+
+#import "LUTToNSDataConverter.h"
+
 3. Under build settings, set the Objective-C Bridging Header (SWIFT_OBJC_BRIDGING_HEADER) build setting under "Swift Compiler - Code Generation" to the previously created bridging header.
 
 ## Objective-C compatibility
 
 All public classes, methods and enums can be mixed and matched with Objective-C. If you installed imglyKit with CocoaPods or Carthage or embedded the framework directly all you have to do is import the framework: 
 
-		@import imglyKit;
+@import imglyKit;
 
 If you chose to use the "Source Files" method, you have to import a header file that was automatically generated by Xcode from the Swift code. The name of that file is your product module name followed by "-Swift.h" (e.g. "ExampleApp-Swift.h"):
 
-		#import "ExampleApp-Swift.h" 
+#import "ExampleApp-Swift.h" 
 
 For more information about Swift and Objective-C interoperability please refer to [Using Swift with Cocoa and Objective-C](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
 
@@ -134,7 +123,7 @@ The frontend part of the SDK contains all the views and view controllers, or gen
 For the camera UI there is the `IMGLYCameraViewController`. That controller shows a camera live stream, a filter selector, and controls to operate the camera settings such as flash, front camera or back camera. You have to instantiate the `IMGLYCameraViewController` with the recording modes that you want to make available, currently `.Photo` and `.Video` are supported.
 After a photo has been taken the `IMGLYCameraViewController` calls the handed over completion handler, or if none is set, it presents a `IMGLYMainEditorViewController` within a `IMGLYNavigationController` modally. 
 After a video has been taken the `IMGLYCameraViewController` call a completion block with the URL to the generated video file.
- 
+
 The `IMGLYMainEditorViewController` functions as main editor. It is connected to sub editors that allow the user to edit an image. The built-in sub editors are Magic (automatic image enhancement), Filter, Stickers, Orientation (Flip / Rotate), Focus (Tiltshift), Crop, Brightness, Contrast, Saturation, and Text. 
 These dialogs use a lower resolution image as a preview to improve the performance.
 When the user presses the done button of the main editor, the chosen settings are applied to the full resolution image.
@@ -142,17 +131,17 @@ The `IMGLYMainEditorViewController` can be used without the `IMGLYCameraViewCont
 
 ```
 func callEditorViewController() {
-	var editorViewController = IMGLYMainEditorViewController()
-	editorViewController.highResolutionImage = image
-	editorViewController.initialFilterType = .none
-	editorViewController.initialFilterIntensity = 0.5
-	editorViewController.completionBlock = editorCompletionBlock
+var editorViewController = IMGLYMainEditorViewController()
+editorViewController.highResolutionImage = image
+editorViewController.initialFilterType = .none
+editorViewController.initialFilterIntensity = 0.5
+editorViewController.completionBlock = editorCompletionBlock
 }
-	
+
 ...
 
 func editorCompletionBlock(result: IMGLYEditorResult, image: UIImage?) {
-	...
+...
 }
 ```
 
@@ -183,13 +172,13 @@ let filteredImage = IMGLYPhotoProcessor.processWithUIImage(image, filters: [filt
 
 ### Response Filters
 
-Response filters are new in version 2. These enable you to create filters in programs such as photoshop. The main idea behind them is to take an image that represents the identity function, for the colors in an image, and apply effects on that image.
+These enable you to create filters in programs such as photoshop. The main idea behind them is to take an image that represents the identity function, for the colors in an image, and apply effects on that image.
 The resulting image represents the response of the colors to the effect.
 To use the filter in you project you need to:
 
 * Apply the desired modifications to this image <br />  <br />
-   ![identity](http://i.imgur.com/s15Q10X.png)
-     
+![identity](http://i.imgur.com/s15Q10X.png)
+
 * Add the resulting image to the `Filter Responses` group in the project. Note: the image must be saved in PNG format.
 * Create a new class that derives from `IMGLYResponseFilter`.
 * Add a init method that sets the `responseName` property to the filename of the added image.
@@ -202,19 +191,19 @@ Here is an example of a response filter
 
 ```
 class IMGLYSteelTypeFilter: IMGLYResponseFilter {
-   	override init() {
-       	super.init()
-       	self.responseName = "Steel"
-       	self.imgly_displayName = "steel"
-   	}
-    
-   	required init(coder aDecoder: NSCoder) {
-       	super.init(coder: aDecoder)
-   	}
-    
-   	override var filterType: FilterType {
-        return IMGLYFilterType.steel
-   	}
+override init() {
+super.init()
+self.responseName = "Steel"
+self.imgly_displayName = "steel"
+}
+
+required init(coder aDecoder: NSCoder) {
+super.init(coder: aDecoder)
+}
+
+override var filterType: FilterType {
+return IMGLYFilterType.steel
+}
 }
 ```
 
