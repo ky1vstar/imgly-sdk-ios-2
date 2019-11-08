@@ -41,6 +41,18 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 ## Installation
 
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler. It is in early development, but Alamofire does support its use on supported platforms.
+
+Once you have your Swift package set up, adding Alamofire as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ky1vstar/imgly-sdk-ios-2.git", from: "1.1.0")
+]
+```
+
 ### CocoaPods
 
 To integrate imglyKit into your Xcode project using [CocoaPods](http://cocoapods.org), specify it in your `Podfile`:
