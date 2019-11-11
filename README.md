@@ -1,4 +1,4 @@
-![img.ly](http://i.imgur.com/EC8walN.png)
+![img.ly](Assets/Logo.png)
 
 ## Foreword
 
@@ -6,7 +6,7 @@ This project was [originally](https://github.com/chenzeyu/imgly-sdk-ios) created
 
 | imglyKit2 version | Swift version |
 |:-----------------:|:-----------------:|
-| 1.1.0 | 5 |
+| 1.1.0 - 1.2.0 | 5 |
 | 1.0.0 | 4 |
 
 ## img.ly SDK for iOS
@@ -21,7 +21,7 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 * 40 stunning build in filters to choose from.
 * Open source, need anything? Want to change anything? Go ahead, we provide the full source code.
-* Native code. Our backend is Core Image based, therefore we dodge all the nasty OpenGL problems other frameworks face. Also its easier to add new filters. Just derive from `CIFilter` override the `outputImage` property and you are good to go.
+* Native code. Our backend is Core Image based, therefore we dodge all the nasty OpenGL problems other frameworks face. Also its easier to add new filters. Just derive from `CIFilter` override the `outputImage` imageproperty and you are good to go.
 * iPad support.
 * Design filters in photoshop! Before you had to tweak values in code or copy & paste them from photoshop or your favorite image editor. With our response technology that is a thing of the past. Design your filter in photoshop, once you are done apply it onto the provided identity image. That will 'record' the filter response. Save it, add it as new filter, done!
 * Swift. Keeping up with time, we used Swift to code the img.ly SDK, leading to leaner easier code.
@@ -30,7 +30,7 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 * Non-destructive. Don't like what you did? No problem, just redo or even discard it.
 * In addition to adding beautiful filters to your photos, you can now also record videos and add the same filters.
 
-![Example](http://i.imgur.com/EorDrpS.png)
+![Example](Assets/Example.png)
 
 ## Requirements
 
@@ -64,6 +64,18 @@ To integrate imglyKit into your Xcode project using [Carthage](https://github.co
 
 ```ogdl
 github "ky1vstar/imgly-sdk-ios-2"
+```
+
+### Swift Package Manager (thanks to [MoveUpwardsDev](https://github.com/MoveUpwardsDev))
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+
+Once you have your Swift package set up, adding imglyKit as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ky1vstar/imgly-sdk-ios-2.git", from: "1.2.0")
+]
 ```
 
 ### Manually
@@ -131,17 +143,17 @@ The `IMGLYMainEditorViewController` can be used without the `IMGLYCameraViewCont
 
 ```
 func callEditorViewController() {
-var editorViewController = IMGLYMainEditorViewController()
-editorViewController.highResolutionImage = image
-editorViewController.initialFilterType = .none
-editorViewController.initialFilterIntensity = 0.5
-editorViewController.completionBlock = editorCompletionBlock
+	var editorViewController = IMGLYMainEditorViewController()
+	editorViewController.highResolutionImage = image
+	editorViewController.initialFilterType = .none
+	editorViewController.initialFilterIntensity = 0.5
+	editorViewController.completionBlock = editorCompletionBlock
 }
 
 ...
 
 func editorCompletionBlock(result: IMGLYEditorResult, image: UIImage?) {
-...
+	...
 }
 ```
 
@@ -177,7 +189,7 @@ The resulting image represents the response of the colors to the effect.
 To use the filter in you project you need to:
 
 * Apply the desired modifications to this image <br />  <br />
-![identity](http://i.imgur.com/s15Q10X.png)
+![identity](Assets/Identity.png)
 
 * Add the resulting image to the `Filter Responses` group in the project. Note: the image must be saved in PNG format.
 * Create a new class that derives from `IMGLYResponseFilter`.
@@ -191,19 +203,19 @@ Here is an example of a response filter
 
 ```
 class IMGLYSteelTypeFilter: IMGLYResponseFilter {
-override init() {
-super.init()
-self.responseName = "Steel"
-self.imgly_displayName = "steel"
-}
+	override init() {
+		super.init()
+		self.responseName = "Steel"
+		self.imgly_displayName = "steel"
+	}
 
-required init(coder aDecoder: NSCoder) {
-super.init(coder: aDecoder)
-}
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+	}
 
-override var filterType: FilterType {
-return IMGLYFilterType.steel
-}
+	override var filterType: FilterType {
+		return IMGLYFilterType.steel
+	}
 }
 ```
 
