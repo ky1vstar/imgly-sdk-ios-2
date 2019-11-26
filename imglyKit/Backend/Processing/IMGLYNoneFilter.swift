@@ -21,7 +21,7 @@ open class IMGLYNoneFilter : IMGLYResponseFilter {
         super.init(coder: aDecoder)
     }
     
-    @objc init() {
+    @objc public init() {
         super.init(responseName: "None")
         self.imgly_displayName = "None"
     }
