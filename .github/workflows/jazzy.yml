@@ -1,0 +1,16 @@
+name: Jazzy
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  deploy_docs:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Publish Jazzy Docs
+      uses: steven0351/publish-jazzy-docs@v1
+      with:
+        personal_access_token: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+        config: .jazzy.yml
