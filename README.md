@@ -3,7 +3,7 @@
 <h1 align="center">img.ly SDK for iOS</h1>
 
 <p align="center">
-<img src="https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg" alt="Platforms" style="max-width:100%;">
+<img src="https://img.shields.io/badge/platforms-ios%20%7C%20osx-lightgrey.svg" alt="Platforms" style="max-width:100%;">
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/ky1vstar/imgly-sdk-ios-2/actions?query=workflow%3ACI"><img src="https://github.com/ky1vstar/imgly-sdk-ios-2/workflows/CI/badge.svg" alt="CI" style="max-width:100%;"></a>
 <a href="#cocoapods"><img src="https://img.shields.io/badge/CocoaPods-compatible-4BC51D.svg?style=flat" alt="CocoaPods compatible" style="max-width:100%;"></a>
 <a href="#carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" style="max-width:100%;"></a>
