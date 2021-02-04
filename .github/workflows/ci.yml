@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  test:
+    runs-on: macOS-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: SPM build
+      run: swift build
+
+    - name: Lint Podspec
+      run: |
+        set -eo pipefail
+        pod lib lint --allow-warnings --use-libraries
+    
+    - name: Carthage update
+      run: ./scripts/carthage.sh build --platform "ios,macos" --no-skip-current

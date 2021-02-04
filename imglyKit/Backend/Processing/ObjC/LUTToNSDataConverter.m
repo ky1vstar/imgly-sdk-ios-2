@@ -11,12 +11,20 @@
 #import <UIKit/UIKit.h>
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
 #import <AppKit/AppKit.h>
-#import <imglyKit/imglyKit-Swift.h>
 #endif
 #import <Accelerate/Accelerate.h>
 
 static const int kDimension = 64;
 static NSData *identityLUT;
+
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
+@interface NSImage (CGImage)
+
+// Implemented in NSImageExtension.swift
+- (CGImageRef)CGImage;
+
+@end
+#endif
 
 @implementation LUTToNSDataConverter
 

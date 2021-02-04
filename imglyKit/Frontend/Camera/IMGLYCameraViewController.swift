@@ -490,7 +490,7 @@ open class IMGLYCameraViewController: UIViewController {
             if let cameraController = self?.cameraController {
                 return cameraController.effectFilter.filterType
             } else {
-                return .none
+                return IMGLYFilterType.none
             }
         }
     }
