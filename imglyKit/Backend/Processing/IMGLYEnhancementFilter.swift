@@ -51,7 +51,7 @@ open class IMGLYEnhancementFilter : CIFilter {
         
         
         var intermediateImage: CIImage? = inputImage
-        let filters = intermediateImage?.autoAdjustmentFilters(options: convertToOptionalCIImageAutoAdjustmentOptionDictionary([convertFromCIImageAutoAdjustmentOption(CIImageAutoAdjustmentOption.redEye):NSNumber(value: false as Bool)]))
+        let filters = intermediateImage?.autoAdjustmentFilters(options: [.redEye: false])
         for filter in filters ?? [] {
             filter.setValue(inputImage, forKey: kCIInputImageKey)
             intermediateImage = filter.outputImage
@@ -78,15 +78,4 @@ extension IMGLYEnhancementFilter {
         copy.enhancedImage = enhancedImage?.copy(with: zone) as? CIImage
         return copy
     }
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToOptionalCIImageAutoAdjustmentOptionDictionary(_ input: [String: Any]?) -> [CIImageAutoAdjustmentOption: Any]? {
-	guard let input = input else { return nil }
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (CIImageAutoAdjustmentOption(rawValue: key), value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromCIImageAutoAdjustmentOption(_ input: CIImageAutoAdjustmentOption) -> String {
-	return input.rawValue
 }
