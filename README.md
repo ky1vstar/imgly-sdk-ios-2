@@ -44,7 +44,7 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 * Xcode 10.0
 * Swift 5.0
-* iOS 8.0+
+* iOS 9.0+
 * macOS 10.10+
 
 ## Installation
@@ -105,19 +105,19 @@ These dialogs use a lower resolution image as a preview to improve the performan
 When the user presses the done button of the main editor, the chosen settings are applied to the full resolution image.
 The `IMGLYMainEditorViewController` can be used without the `IMGLYCameraViewController` like so:
 
-```
+```swift
 func callEditorViewController() {
-	var editorViewController = IMGLYMainEditorViewController()
-	editorViewController.highResolutionImage = image
-	editorViewController.initialFilterType = .none
-	editorViewController.initialFilterIntensity = 0.5
-	editorViewController.completionBlock = editorCompletionBlock
+    var editorViewController = IMGLYMainEditorViewController()
+    editorViewController.highResolutionImage = image
+    editorViewController.initialFilterType = .none
+    editorViewController.initialFilterIntensity = 0.5
+    editorViewController.completionBlock = editorCompletionBlock
 }
 
 ...
 
 func editorCompletionBlock(result: IMGLYEditorResult, image: UIImage?) {
-	...
+    ...
 }
 ```
 
@@ -141,7 +141,7 @@ The backend takes care about the actual image manipulation. The `IMGLYPhotoProce
 
 The following code filters an image with the steel filter.
 
-```
+```swift
 let filter = IMGLYInstanceFactory.sharedInstance.effectFilterWithType(.steel)
 let filteredImage = IMGLYPhotoProcessor.processWithUIImage(image, filters: [filter])
 ```
@@ -165,21 +165,21 @@ To use the filter in you project you need to:
 The framework will take care about the rest, such as preview rendering.
 Here is an example of a response filter
 
-```
+```swift
 class IMGLYSteelTypeFilter: IMGLYResponseFilter {
-	override init() {
-		super.init()
-		self.responseName = "Steel"
-		self.imgly_displayName = "steel"
-	}
+    override init() {
+        super.init()
+        self.responseName = "Steel"
+        self.imgly_displayName = "steel"
+    }
 
-	required init(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-	}
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
-	override var filterType: FilterType {
-		return IMGLYFilterType.steel
-	}
+    override var filterType: FilterType {
+        return IMGLYFilterType.steel
+    }
 }
 ```
 
