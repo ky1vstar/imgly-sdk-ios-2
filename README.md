@@ -10,9 +10,7 @@
 <a href="#swift-package-manager"><img src="https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat" alt="SPM compatible" style="max-width:100%;"></a>
 </p>
 
-<p align="center">
 img.ly SDK for iOS is a Cocoa Touch framework for creating stunning images with a nice selection of premium filters.
-</p>
 
 ## Foreword
 
@@ -53,82 +51,38 @@ img.ly SDK provides tools for creating photo applications for iOS with a big var
 
 ### CocoaPods
 
-To integrate imglyKit into your Xcode project using [CocoaPods](http://cocoapods.org), specify it in your `Podfile`:
-
-```ruby
-use_frameworks!
-
-pod 'imglyKit2', '~> 1.1' # Swift 5
-pod 'imglyKit2', '=> 1.0.0' # Swift 4
-```
-
-Then, run the following command:
+imglyKit is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
 
 ```bash
-$ pod install
+pod 'imglyKit2'
 ```
 
 ### Carthage
 
-To integrate imglyKit into your Xcode project using [Carthage](https://github.com/Carthage/Carthage), specify it in your `Cartfile`:
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+
+To integrate imglyKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
 github "ky1vstar/imgly-sdk-ios-2"
 ```
 
-### Swift Package Manager (thanks to [MoveUpwardsDev](https://github.com/MoveUpwardsDev))
+Run `carthage update` to build the framework and drag the built `imglyKit.framework` into your Xcode project. 
 
-The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+On your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase” and add the Framework path as mentioned in [Carthage Getting started Step 4, 5 and 6](https://github.com/Carthage/Carthage/blob/master/README.md#if-youre-building-for-ios-tvos-or-watchos)
 
-Once you have your Swift package set up, adding imglyKit as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+### Swift Package Manager
+
+To integrate using Apple's [Swift Package Manager](https://swift.org/package-manager/), add the following as a dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/ky1vstar/imgly-sdk-ios-2.git", from: "1.2.0")
+    .package(url: "https://github.com/ky1vstar/imgly-sdk-ios-2.git", from: "1.3.0")
 ]
 ```
 
-### Manually
-
-If you prefer not to use either of the aforementioned dependency managers, you can integrate imglyKit into your project manually.
-
-#### Embedded Framework
-
-- Add imglyKit as a [submodule](http://git-scm.com/docs/git-submodule) by opening the Terminal, `cd`-ing into your top-level project directory, and entering the following command:
-
-```bash
-$ git submodule add https://github.com/ky1vstar/imgly-sdk-ios-2.git
-```
-
-1. Open the `imglyKit` folder, and drag `imglyKit.xcodeproj` into the file navigator of your app project.
-2. In Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar.
-3. Ensure that the deployment target of imglyKit.framework matches that of the application target.
-4. In the tab bar at the top of that window, open the "Build Phases" panel.
-5. Expand the "Target Dependencies" group, and add `imglyKit.framework`.
-6. Click on the `+` button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `imglyKit.framework`.
-
-#### Source Files
-
-We strongly recommend that you use any of the methods described above for installation. If you decide to use this method, please note that you won't be able to use the `imglyKit` namespace.
-
-1. Drop all the files within the [imglyKit directory](https://github.com/ky1vstar/imgly-sdk-ios-2/tree/master/imglyKit) except for `imglyKit.h` and `Info.plist` into your Xcode project.
-2. Create a bridging header (File > New > File > iOS > Source > Header File) and name it by your product module name followed by "-Bridging-Header.h" (e.g. "ExampleApp-Bridging-Header.h"). Add these lines to the header: 
-
-#import "LUTToNSDataConverter.h"
-
-3. Under build settings, set the Objective-C Bridging Header (SWIFT_OBJC_BRIDGING_HEADER) build setting under "Swift Compiler - Code Generation" to the previously created bridging header.
-
-## Objective-C compatibility
-
-All public classes, methods and enums can be mixed and matched with Objective-C. If you installed imglyKit with CocoaPods or Carthage or embedded the framework directly all you have to do is import the framework: 
-
-@import imglyKit;
-
-If you chose to use the "Source Files" method, you have to import a header file that was automatically generated by Xcode from the Swift code. The name of that file is your product module name followed by "-Swift.h" (e.g. "ExampleApp-Swift.h"):
-
-#import "ExampleApp-Swift.h" 
-
-For more information about Swift and Objective-C interoperability please refer to [Using Swift with Cocoa and Objective-C](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html).
+Alternatively navigate to your Xcode project, select `Swift Packages` and click the `+` icon to search for `imgly-sdk-ios-2`.
 
 ## Structure
 
