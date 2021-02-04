@@ -1,4 +1,18 @@
-![img.ly](Assets/Logo.png)
+<p align="center"><img src="Assets/Logo.png"/></p>
+
+<h1 align="center">img.ly SDK for iOS</h1>
+
+<p align="center">
+<img src="https://img.shields.io/badge/platforms-ios%20%7C%20osx%20%7C%20watchos%20%7C%20tvos-lightgrey.svg" alt="Platforms" style="max-width:100%;">
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/ky1vstar/imgly-sdk-ios-2/actions?query=workflow%3ACI"><img src="https://github.com/ky1vstar/imgly-sdk-ios-2/workflows/CI/badge.svg" alt="CI" style="max-width:100%;"></a>
+<a href="#cocoapods"><img src="https://img.shields.io/badge/CocoaPods-compatible-4BC51D.svg?style=flat" alt="CocoaPods compatible" style="max-width:100%;"></a>
+<a href="#carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible" style="max-width:100%;"></a>
+<a href="#swift-package-manager"><img src="https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat" alt="SPM compatible" style="max-width:100%;"></a>
+</p>
+
+<p align="center">
+img.ly SDK for iOS is a Cocoa Touch framework for creating stunning images with a nice selection of premium filters.
+</p>
 
 ## Foreword
 
@@ -6,12 +20,8 @@ This project was [originally](https://github.com/chenzeyu/imgly-sdk-ios) created
 
 | imglyKit2 version | Swift version |
 |:-----------------:|:-----------------:|
-| 1.1.0 - 1.2.0 | 5 |
+| 1.1.0 - 1.3.0 | 5 |
 | 1.0.0 | 4 |
-
-## img.ly SDK for iOS
-
-img.ly SDK for iOS is a Cocoa Touch framework for creating stunning images with a nice selection of premium filters.
 
 ### Overview
 
