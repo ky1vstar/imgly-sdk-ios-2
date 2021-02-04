@@ -26,5 +26,5 @@ jobs:
       
     - name: Carthage XCFramework build
       run: |
-        brew update carthage
+        brew upgrade carthage
         carthage build --platform "ios,macos" --no-skip-current --use-xcframeworks
