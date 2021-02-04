@@ -23,3 +23,8 @@ jobs:
     
     - name: Carthage build
       run: ./scripts/carthage.sh build --platform "ios,macos" --no-skip-current
+      
+    - name: Carthage XCFramework build
+      run: |
+        brew update carthage
+        carthage build --platform "ios,macos" --no-skip-current --use-xcframeworks
