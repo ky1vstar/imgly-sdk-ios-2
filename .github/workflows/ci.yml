@@ -7,25 +7,44 @@ on:
     branches: [ master ]
     
 jobs:
-  build:
+  spm:
     runs-on: macOS-latest
-    
     steps:
     - uses: actions/checkout@v2
-    
     - name: SPM build
       run: swift build
 
+  cocoapods:
+    runs-on: macOS-latest
+    steps:
     - name: Lint Podspec
       run: |
         set -eo pipefail
         pod lib lint --allow-warnings --use-libraries
-    
+
+  carthage:
+    runs-on: macOS-latest
+    steps:
     - name: Carthage build
       run: ./scripts/carthage.sh build --platform "ios,macos" --no-skip-current
-      
+
+  carthage_xcframework:
+    runs-on: macOS-latest
+    steps:
     - name: Carthage XCFramework build
       run: |
         brew update
         brew upgrade carthage
         carthage build --platform "ios,macos" --no-skip-current --use-xcframeworks
+
+  deploy_docs:
+    runs-on: macos-latest
+    needs: [spm, cocoapods, carthage, carthage_xcframework]
+    if: ${{ github.event_name == 'push' }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Publish Jazzy Docs
+      uses: steven0351/publish-jazzy-docs@v1
+      with:
+        personal_access_token: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+        config: .jazzy.yml
