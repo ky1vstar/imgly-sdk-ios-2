@@ -17,6 +17,7 @@ jobs:
   cocoapods:
     runs-on: macOS-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Lint Podspec
       run: |
         set -eo pipefail
@@ -25,12 +26,14 @@ jobs:
   carthage:
     runs-on: macOS-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Carthage build
       run: ./scripts/carthage.sh build --platform "ios,macos" --no-skip-current
 
   carthage_xcframework:
     runs-on: macOS-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Carthage XCFramework build
       run: |
         brew update
