@@ -51,42 +51,44 @@ extension IMGLYFilterSelectionController {
     }
     
     open override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionViewCellReuseIdentifier, for: indexPath) 
+        return collectionView.dequeueReusableCell(withReuseIdentifier: FilterCollectionViewCellReuseIdentifier, for: indexPath)
+    }
+    
+    open override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let filterCell = cell as? IMGLYFilterCollectionViewCell else {
+            return
+        }
         
-        if let filterCell = cell as? IMGLYFilterCollectionViewCell {
-            let bundle = Bundle(for: type(of: self))
-            let filterType = IMGLYInstanceFactory.availableFilterList[indexPath.item]
-            let filter = IMGLYInstanceFactory.effectFilterWithType(filterType)
-            
-            filterCell.textLabel.text = filter.imgly_displayName
-            filterCell.imageView.layer.cornerRadius = 3
-            filterCell.imageView.clipsToBounds = true
-            filterCell.imageView.contentMode = .scaleToFill
-            filterCell.imageView.image = nil
-            filterCell.hideTick()
+        let bundle = Bundle(for: type(of: self))
+        let filterType = IMGLYInstanceFactory.availableFilterList[indexPath.item]
+        let filter = IMGLYInstanceFactory.effectFilterWithType(filterType)
+        
+        filterCell.textLabel.text = filter.imgly_displayName
+        filterCell.imageView.layer.cornerRadius = 3
+        filterCell.imageView.clipsToBounds = true
+        filterCell.imageView.contentMode = .scaleToFill
+        filterCell.imageView.image = nil
+        filterCell.hideTick()
 
-            if let filterPreviewImage = FilterPreviews[filterType] {
-                self.updateCell(filterCell, atIndexPath: indexPath, withFilterType: filter.filterType, forImage: filterPreviewImage)
-                filterCell.activityIndicator.stopAnimating()
-            } else {
-                filterCell.activityIndicator.startAnimating()
+        if let filterPreviewImage = FilterPreviews[filterType] {
+            self.updateCell(filterCell, atIndexPath: indexPath, withFilterType: filter.filterType, forImage: filterPreviewImage)
+            filterCell.activityIndicator.stopAnimating()
+        } else {
+            filterCell.activityIndicator.startAnimating()
+            
+            // Create filterPreviewImage
+            PhotoProcessorQueue.async {
+                let filterPreviewImage = IMGLYPhotoProcessor.processWithUIImage(UIImage(named: "nonePreview", in: bundle, compatibleWith:nil)!, filters: [filter])
                 
-                // Create filterPreviewImage
-                PhotoProcessorQueue.async {
-                    let filterPreviewImage = IMGLYPhotoProcessor.processWithUIImage(UIImage(named: "nonePreview", in: bundle, compatibleWith:nil)!, filters: [filter])
-                    
-                    DispatchQueue.main.async {
-                        FilterPreviews[filterType] = filterPreviewImage
-                        if let filterCell = collectionView.cellForItem(at: indexPath) as? IMGLYFilterCollectionViewCell {
-                            self.updateCell(filterCell, atIndexPath: indexPath, withFilterType: filter.filterType, forImage: filterPreviewImage)
-                            filterCell.activityIndicator.stopAnimating()
-                        }
+                DispatchQueue.main.async {
+                    FilterPreviews[filterType] = filterPreviewImage
+                    if let filterCell = collectionView.cellForItem(at: indexPath) as? IMGLYFilterCollectionViewCell {
+                        self.updateCell(filterCell, atIndexPath: indexPath, withFilterType: filter.filterType, forImage: filterPreviewImage)
+                        filterCell.activityIndicator.stopAnimating()
                     }
                 }
             }
         }
-        
-        return cell
     }
     
     // MARK: - Helpers
