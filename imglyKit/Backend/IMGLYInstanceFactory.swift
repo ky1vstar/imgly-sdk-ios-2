@@ -294,6 +294,11 @@ open class IMGLYInstanceFactory {
     */
     open class var availableFontsList: [String] {
         return [
+            "LouisVuitton-Bold",
+            "LouisVuitton-Light",
+            "LouisVuitton-Medium",
+            "LouisVuitton-Oblique",
+            "LouisVuitton-Regular",
             "AmericanTypewriter",
             "Avenir-Heavy",
             "ChalkboardSE-Regular",

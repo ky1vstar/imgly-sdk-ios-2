@@ -194,7 +194,7 @@ open class IMGLYCameraController: NSObject {
         return nil
     }
     
-    fileprivate func checkSDKVersion() {
+    /*fileprivate func checkSDKVersion() {
         let appIdentifier = Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String
         if let appIdentifier = appIdentifier, let url = URL(string: "https://photoeditorsdk.com/version.json?type=ios&app=\(appIdentifier)") {
             let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
@@ -217,7 +217,7 @@ open class IMGLYCameraController: NSObject {
             
             task.resume()
         }
-    }
+    }*/
     
     // MARK: - Authorization
     
@@ -703,7 +703,7 @@ open class IMGLYCameraController: NSObject {
             return
         }
         
-        checkSDKVersion()
+        //checkSDKVersion()
         checkDeviceAuthorizationStatus()
         
         guard let glContext = EAGLContext(api: .openGLES2) else {
@@ -737,8 +737,8 @@ open class IMGLYCameraController: NSObject {
             self.delegate?.cameraControllerDidCompleteSetup?(self)
         }
         
-        setupFocusIndicator()
-        setupMaskLayers()
+        //setupFocusIndicator()
+        //setupMaskLayers()
         
         setupComplete = true
     }
