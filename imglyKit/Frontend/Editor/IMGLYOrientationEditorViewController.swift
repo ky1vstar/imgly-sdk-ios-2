@@ -54,7 +54,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
     
     fileprivate lazy var transparentRectView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.8)
+        view.backgroundColor = .clear
         return view
         }()
     

@@ -108,6 +108,18 @@ open class IMGLYCameraViewController: UIViewController {
         return button
         }()
     
+    open fileprivate(set) lazy var doneButton: UIButton = {
+        let bundle = Bundle(for: type(of: self))
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.setTitle(NSLocalizedString("camera-view-controller.camera.done", tableName: nil, bundle: bundle, value: "", comment: "") , for: .normal)
+        button.contentHorizontalAlignment = .right
+        button.addTarget(self, action: #selector(IMGLYCameraViewController.dismissCamera(_:)), for: .touchUpInside)
+        button.isHidden = true
+        return button
+        }()
+    
     /*open fileprivate(set) lazy var cameraRollButton: UIButton = {
         let bundle = Bundle(for: type(of: self))
         let button = UIButton()
@@ -224,6 +236,7 @@ open class IMGLYCameraViewController: UIViewController {
         didSet {
             flashButton.isEnabled = buttonsEnabled
             switchCameraButton.isEnabled = buttonsEnabled
+            doneButton.isEnabled = buttonsEnabled
             //cameraRollButton.isEnabled = buttonsEnabled
             actionButtonContainer.isUserInteractionEnabled = buttonsEnabled
             
@@ -341,6 +354,7 @@ open class IMGLYCameraViewController: UIViewController {
         view.addSubview(filterSelectionController.view)
         
         topControlsView.addSubview(flashButton)
+        topControlsView.addSubview(doneButton)
         topControlsView.addSubview(switchCameraButton)
         
         //bottomControlsView.addSubview(cameraRollButton)
@@ -364,6 +378,7 @@ open class IMGLYCameraViewController: UIViewController {
             "filterSelectionView" : filterSelectionController.view,
             "flashButton" : flashButton,
             "switchCameraButton" : switchCameraButton,
+            "doneButton" : doneButton,
             //"cameraRollButton" : cameraRollButton,
             "actionButtonContainer" : actionButtonContainer,
             "filterSelectionButton" : filterSelectionButton,
@@ -406,9 +421,10 @@ open class IMGLYCameraViewController: UIViewController {
     }
     
     fileprivate func configureTopControlsConstraintsWithMetrics(_ metrics: [String : AnyObject], views: [String : AnyObject]) {
-        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==topControlMargin)-[flashButton(>=topControlMinWidth)]-(>=topControlMargin)-[switchCameraButton(>=topControlMinWidth)]-(==topControlMargin)-|", options: [], metrics: metrics, views: views))
+        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==topControlMargin)-[flashButton(>=topControlMinWidth)]-(>=topControlMargin)-[switchCameraButton(>=topControlMinWidth)]-(==topControlMargin)-[doneButton(>=topControlMinWidth)]-(==topControlMargin)-|", options: [], metrics: metrics, views: views))
         topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[flashButton]|", options: [], metrics: nil, views: views))
         topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[switchCameraButton]|", options: [], metrics: nil, views: views))
+        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[doneButton]|", options: [], metrics: nil, views: views))
     }
     
     fileprivate func configureBottomControlsConstraintsWithMetrics(_ metrics: [String : AnyObject], views: [String : AnyObject]) {
@@ -701,6 +717,11 @@ open class IMGLYCameraViewController: UIViewController {
     @objc open func switchCamera(_ sender: UIButton?) {
         cameraController?.toggleCameraPosition()
     }
+    @objc open func dismissCamera(_ sender: UIButton?) {
+        self.dismiss(animated: true, completion: {
+         
+        })
+    }
     
     @objc open func showCameraRoll(_ sender: UIButton?) {
         let imagePicker = UIImagePickerController()
@@ -853,6 +874,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
         DispatchQueue.main.async {
             self.updateFlashButton()
             self.switchCameraButton.isHidden = !cameraController.moreThanOneCameraPresent
+            self.doneButton.isHidden = self.switchCameraButton.isHidden
         }
     }
     
@@ -979,6 +1001,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
                 self.swipeRightGestureRecognizer.isEnabled = false
                 
                 self.switchCameraButton.alpha = 0
+                self.doneButton.alpha = 0
                 self.filterSelectionButton.alpha = 0
                 self.bottomControlsView.backgroundColor = UIColor.clear
                 
@@ -995,6 +1018,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
             self.swipeRightGestureRecognizer.isEnabled = true
             
             self.switchCameraButton.alpha = 1
+            self.doneButton.alpha = 1
             self.filterSelectionButton.alpha = 1
             self.bottomControlsView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
             
