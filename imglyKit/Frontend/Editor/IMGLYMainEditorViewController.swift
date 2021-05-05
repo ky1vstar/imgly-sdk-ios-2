@@ -51,9 +51,9 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.filter", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_filters", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.filter) }))
+                title: NSLocalizedString("main-editor.button.text", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_text", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.text) }))
         
         handlers.append(
             IMGLYActionButton(
@@ -63,21 +63,21 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.orientation", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_orientation", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.orientation) }))
-        
-        handlers.append(
-            IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.focus", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_focus", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.focus) }))
+                title: NSLocalizedString("main-editor.button.filter", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_filters", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.filter) }))
         
         handlers.append(
             IMGLYActionButton(
                 title: NSLocalizedString("main-editor.button.crop", tableName: nil, bundle: bundle, value: "", comment: ""),
                 image: UIImage(named: "icon_option_crop", in: bundle, compatibleWith: nil),
                 handler: { [unowned self] in self.subEditorButtonPressed(.crop) }))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.orientation", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_orientation", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.orientation) }))
         
         handlers.append(
             IMGLYActionButton(
@@ -99,12 +99,12 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.text", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_text", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.text) }))
+                title: NSLocalizedString("main-editor.button.focus", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_focus", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.focus) }))
         
         return handlers
-        }()
+    }()
     
     open var completionBlock: IMGLYEditorCompletionBlock?
     open var initialFilterType = IMGLYFilterType.none
