@@ -9,6 +9,8 @@
 #if os(iOS)
 import UIKit
 import CoreImage
+import ImageIO
+import MobileCoreServices
 #elseif os(OSX)
 import AppKit
 import QuartzCore
@@ -21,11 +23,7 @@ open class IMGLYStickerFilter: CIFilter {
     @objc open var inputImage: CIImage?
     
     /// The sticker that should be rendered.
-    #if os(iOS)
-    open var sticker: UIImage?
-    #elseif os(OSX)
-    public var sticker: NSImage?
-    #endif
+    open var sticker: IMGLYSticker?
     
     /// The transform to apply to the sticker
     open var transform = CGAffineTransform.identity
@@ -67,7 +65,7 @@ open class IMGLYStickerFilter: CIFilter {
     }
     
     open func absolutStickerSizeForImageSize(_ imageSize: CGSize) -> CGSize {
-        let stickerRatio = sticker!.size.height / sticker!.size.width
+        let stickerRatio = sticker!.resultImage!.size.height / sticker!.resultImage!.size.width
         return CGSize(width: self.scale * imageSize.width, height: self.scale * stickerRatio * imageSize.width)
     }
     
@@ -125,9 +123,23 @@ open class IMGLYStickerFilter: CIFilter {
         // Move the origin back by half
         context.translateBy(x: imageRect.size.width * -0.5, y: imageRect.size.height * -0.5)
         
-        sticker?.draw(in: CGRect(origin: CGPoint(), size: size))
+        //TODO: replace the use of resultImage by dataGif to obtain a animated Image
+        sticker?.resultImage?.draw(in: CGRect(origin: CGPoint(), size: size))
         context.restoreGState()
     }
+    
+    
+    /*func createGIF(with images: [CGImage], data: CFMutableData, loopCount: Int, frameDelay: Double) -> Data {
+        let gifDest=CGImageDestinationCreateWithData(data, kUTTypeGIF, images.count, nil)
+        let fileProperties=[kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: loopCount]]
+        CGImageDestinationSetProperties(gifDest!, fileProperties as CFDictionary?)
+        let frameProperties=[(kCGImagePropertyGIFDictionary as String): [(kCGImagePropertyGIFDelayTime as String): frameDelay]]
+        for img in images {
+            CGImageDestinationAddImage(gifDest!, img, frameProperties as CFDictionary?)
+        }
+        CGImageDestinationFinalize(gifDest!)
+        return data as Data
+    }*/
 }
 
 extension IMGLYStickerFilter {

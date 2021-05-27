@@ -7,14 +7,18 @@
 //
 
 import UIKit
+import Gifu
 
 open class IMGLYSticker: NSObject {
-    public let image: UIImage
-    public let thumbnail: UIImage?
+    public let image: UIImage?
+    public let dataGif: Data?
+    public var resultImage: UIImage?
     
-    public init(image: UIImage, thumbnail: UIImage?) {
+    public init(image: UIImage? = nil, dataGif: Data? = nil) {
         self.image = image
-        self.thumbnail = thumbnail
+        self.dataGif = dataGif
+        self.resultImage = image
         super.init()
     }
 }
+

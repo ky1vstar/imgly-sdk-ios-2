@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import Gifu
 
 class IMGLYStickerCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Properties
     
-    lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
+    lazy var imageView: IMGLYGIFImageView = {
+        let imageView = IMGLYGIFImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         return imageView
         }()
 
@@ -55,5 +57,10 @@ class IMGLYStickerCollectionViewCell: UICollectionViewCell {
             options: [],
             metrics: nil,
             views: views))
+    }
+    
+    override func prepareForReuse() {
+      super.prepareForReuse()
+      imageView.prepareForReuse()
     }
 }
