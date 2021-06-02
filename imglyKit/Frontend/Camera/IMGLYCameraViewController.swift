@@ -120,18 +120,6 @@ open class IMGLYCameraViewController: UIViewController {
         return button
         }()
     
-    /*open fileprivate(set) lazy var cameraRollButton: UIButton = {
-        let bundle = Bundle(for: type(of: self))
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "nonePreview", in: bundle, compatibleWith: nil), for: [])
-        button.imageView?.contentMode = .scaleAspectFill
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(IMGLYCameraViewController.showCameraRoll(_:)), for: .touchUpInside)
-        return button
-        }()*/
-    
     open fileprivate(set) lazy var actionButtonContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -717,10 +705,9 @@ open class IMGLYCameraViewController: UIViewController {
     @objc open func switchCamera(_ sender: UIButton?) {
         cameraController?.toggleCameraPosition()
     }
+    
     @objc open func dismissCamera(_ sender: UIButton?) {
-        self.dismiss(animated: true, completion: {
-         
-        })
+        self.dismiss(animated: true)
     }
     
     @objc open func showCameraRoll(_ sender: UIButton?) {
