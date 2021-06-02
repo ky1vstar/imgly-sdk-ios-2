@@ -40,6 +40,10 @@ open class IMGLYFixedFilterStack: NSObject {
         return activeFilters
     }
     
+    open var activeFiltersWithoutStickers: [CIFilter] {
+        return [enhancementFilter, orientationCropFilter, tiltShiftFilter, effectFilter, brightnessFilter, textFilter]
+    }
+    
     // MARK: - Initializers
     
     required override public init () {

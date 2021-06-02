@@ -802,7 +802,7 @@ open class IMGLYCameraViewController: UIViewController {
     
     // MARK: - Completion
     
-    fileprivate func editorCompletionBlock(_ result: IMGLYEditorResult, image: UIImage?) {
+    fileprivate func editorCompletionBlock(_ result: IMGLYEditorResult, image: UIImage?, url: URL?) {
         if let image = image, result == .done {
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(IMGLYCameraViewController.image(_:didFinishSavingWithError:contextInfo:)), nil)
         }

@@ -79,7 +79,7 @@ open class IMGLYStickerFilter: CIFilter {
         UIRectFill(CGRect(origin: CGPoint(), size: imageSize))
         
         if let context = UIGraphicsGetCurrentContext() {
-            drawStickerInContext(context, withImageOfSize: imageSize)
+            drawStickerInContext(context,input: sticker?.resultImage, withImageOfSize: imageSize)
         }
     
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -109,7 +109,7 @@ open class IMGLYStickerFilter: CIFilter {
     
     #endif
     
-    fileprivate func drawStickerInContext(_ context: CGContext, withImageOfSize imageSize: CGSize) {
+    fileprivate func drawStickerInContext(_ context: CGContext, input: UIImage? ,withImageOfSize imageSize: CGSize) {
         context.saveGState()
         
         let center = CGPoint(x: self.center.x * imageSize.width, y: self.center.y * imageSize.height)
@@ -123,23 +123,10 @@ open class IMGLYStickerFilter: CIFilter {
         // Move the origin back by half
         context.translateBy(x: imageRect.size.width * -0.5, y: imageRect.size.height * -0.5)
         
-        //TODO: replace the use of resultImage by dataGif to obtain a animated Image
-        sticker?.resultImage?.draw(in: CGRect(origin: CGPoint(), size: size))
+        input?.draw(in: CGRect(origin: CGPoint(), size: size))
         context.restoreGState()
     }
     
-    
-    /*func createGIF(with images: [CGImage], data: CFMutableData, loopCount: Int, frameDelay: Double) -> Data {
-        let gifDest=CGImageDestinationCreateWithData(data, kUTTypeGIF, images.count, nil)
-        let fileProperties=[kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: loopCount]]
-        CGImageDestinationSetProperties(gifDest!, fileProperties as CFDictionary?)
-        let frameProperties=[(kCGImagePropertyGIFDictionary as String): [(kCGImagePropertyGIFDelayTime as String): frameDelay]]
-        for img in images {
-            CGImageDestinationAddImage(gifDest!, img, frameProperties as CFDictionary?)
-        }
-        CGImageDestinationFinalize(gifDest!)
-        return data as Data
-    }*/
 }
 
 extension IMGLYStickerFilter {

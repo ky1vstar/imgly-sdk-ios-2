@@ -8,6 +8,7 @@
 
 import UIKit
 import Gifu
+import AVFoundation
 
 let StickersCollectionViewCellSize = CGSize(width: 90, height: 90)
 let StickersCollectionViewCellReuseIdentifier = "StickersCollectionViewCell"
@@ -82,7 +83,8 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     open override func tappedDone(_ sender: UIBarButtonItem?) {
         var addedStickers = false
-        
+        var containsGif: Bool = false
+
         for view in stickersClipView.subviews {
             if let view = view as? IMGLYGIFImageView {
                 if let image = view.image {
@@ -102,12 +104,16 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
                     fixedFilterStack.stickerFilters.append(stickerFilter)
                     addedStickers = true
                 }
+                if view.isAnimatingGIF {
+                    containsGif = true
+                }
             }
         }
-        
+        IMGLYStrickersManager.shared.addedGifStickers = containsGif
         if addedStickers {
             updatePreviewImageWithCompletion {
                 self.stickersClipView.removeFromSuperview()
+                IMGLYStrickersManager.shared.stickersClipView = self.stickersClipView
                 super.tappedDone(sender)
             }
         } else {
