@@ -9,6 +9,8 @@
 #if os(iOS)
 import UIKit
 import CoreImage
+import ImageIO
+import MobileCoreServices
 #elseif os(OSX)
 import AppKit
 import QuartzCore
@@ -21,11 +23,7 @@ open class IMGLYStickerFilter: CIFilter {
     @objc open var inputImage: CIImage?
     
     /// The sticker that should be rendered.
-    #if os(iOS)
-    open var sticker: UIImage?
-    #elseif os(OSX)
-    public var sticker: NSImage?
-    #endif
+    open var sticker: IMGLYSticker?
     
     /// The transform to apply to the sticker
     open var transform = CGAffineTransform.identity
@@ -67,7 +65,7 @@ open class IMGLYStickerFilter: CIFilter {
     }
     
     open func absolutStickerSizeForImageSize(_ imageSize: CGSize) -> CGSize {
-        let stickerRatio = sticker!.size.height / sticker!.size.width
+        let stickerRatio = sticker!.resultImage!.size.height / sticker!.resultImage!.size.width
         return CGSize(width: self.scale * imageSize.width, height: self.scale * stickerRatio * imageSize.width)
     }
     
@@ -81,7 +79,7 @@ open class IMGLYStickerFilter: CIFilter {
         UIRectFill(CGRect(origin: CGPoint(), size: imageSize))
         
         if let context = UIGraphicsGetCurrentContext() {
-            drawStickerInContext(context, withImageOfSize: imageSize)
+            drawStickerInContext(context,input: sticker?.resultImage, withImageOfSize: imageSize)
         }
     
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -111,7 +109,7 @@ open class IMGLYStickerFilter: CIFilter {
     
     #endif
     
-    fileprivate func drawStickerInContext(_ context: CGContext, withImageOfSize imageSize: CGSize) {
+    fileprivate func drawStickerInContext(_ context: CGContext, input: UIImage? ,withImageOfSize imageSize: CGSize) {
         context.saveGState()
         
         let center = CGPoint(x: self.center.x * imageSize.width, y: self.center.y * imageSize.height)
@@ -125,9 +123,10 @@ open class IMGLYStickerFilter: CIFilter {
         // Move the origin back by half
         context.translateBy(x: imageRect.size.width * -0.5, y: imageRect.size.height * -0.5)
         
-        sticker?.draw(in: CGRect(origin: CGPoint(), size: size))
+        input?.draw(in: CGRect(origin: CGPoint(), size: size))
         context.restoreGState()
     }
+    
 }
 
 extension IMGLYStickerFilter {

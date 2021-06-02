@@ -28,7 +28,7 @@ import UIKit
     case reset
 }
 
-public typealias IMGLYEditorCompletionBlock = (IMGLYEditorResult, UIImage?) -> Void
+public typealias IMGLYEditorCompletionBlock = (IMGLYEditorResult, UIImage?, URL?) -> Void
 
 private let ButtonCollectionViewCellReuseIdentifier = "ButtonCollectionViewCell"
 private let ButtonCollectionViewCellSize = CGSize(width: 66, height: 90)
@@ -51,9 +51,9 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.filter", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_filters", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.filter) }))
+                title: NSLocalizedString("main-editor.button.text", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_text", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.text) }))
         
         handlers.append(
             IMGLYActionButton(
@@ -63,21 +63,21 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.orientation", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_orientation", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.orientation) }))
-        
-        handlers.append(
-            IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.focus", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_focus", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.focus) }))
+                title: NSLocalizedString("main-editor.button.filter", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_filters", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.filter) }))
         
         handlers.append(
             IMGLYActionButton(
                 title: NSLocalizedString("main-editor.button.crop", tableName: nil, bundle: bundle, value: "", comment: ""),
                 image: UIImage(named: "icon_option_crop", in: bundle, compatibleWith: nil),
                 handler: { [unowned self] in self.subEditorButtonPressed(.crop) }))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.orientation", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_orientation", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.orientation) }))
         
         handlers.append(
             IMGLYActionButton(
@@ -99,12 +99,12 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         handlers.append(
             IMGLYActionButton(
-                title: NSLocalizedString("main-editor.button.text", tableName: nil, bundle: bundle, value: "", comment: ""),
-                image: UIImage(named: "icon_option_text", in: bundle, compatibleWith: nil),
-                handler: { [unowned self] in self.subEditorButtonPressed(.text) }))
+                title: NSLocalizedString("main-editor.button.focus", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_focus", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.focus) }))
         
         return handlers
-        }()
+    }()
     
     open var completionBlock: IMGLYEditorCompletionBlock?
     open var initialFilterType = IMGLYFilterType.none
@@ -218,9 +218,9 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
     
     // MARK: - EditorViewController
     
-    override open func tappedDone(_ sender: UIBarButtonItem?) {
+    fileprivate func prepareImage(_ sender: UIBarButtonItem?, url: URL?) {
         if let completionBlock = completionBlock {
-            highResolutionImage = highResolutionImage?.imgly_normalizedImage
+            
             var filteredHighResolutionImage: UIImage?
             
             if let highResolutionImage = self.highResolutionImage {
@@ -229,21 +229,37 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
                     filteredHighResolutionImage = IMGLYPhotoProcessor.processWithUIImage(highResolutionImage, filters: self.fixedFilterStack.activeFilters)
                     
                     DispatchQueue.main.async {
-                        completionBlock(.done, filteredHighResolutionImage)
+                        completionBlock(.done, filteredHighResolutionImage, url)
                         sender?.isEnabled = true
                     }
                 }
             } else {
-                completionBlock(.done, filteredHighResolutionImage)
+                completionBlock(.done, filteredHighResolutionImage, url)
             }
         } else {
             dismiss(animated: true, completion: nil)
         }
     }
     
+    override open func tappedDone(_ sender: UIBarButtonItem?) {
+        
+        highResolutionImage = highResolutionImage?.imgly_normalizedImage
+        //Generate video if contain Gif stickers
+        if IMGLYStrickersManager.shared.addedGifStickers {
+            let withoutStickersImage = IMGLYPhotoProcessor.processWithUIImage(highResolutionImage ?? UIImage(), filters: self.fixedFilterStack.activeFiltersWithoutStickers)
+            IMGLYStrickersManager.shared.generateVideo(withoutStickersImage ?? UIImage()) { url in
+                self.prepareImage(sender, url: url)
+            }
+        } else {
+            self.prepareImage(sender, url: nil)
+        }
+        
+        
+    }
+    
     @objc fileprivate func cancelTapped(_ sender: UIBarButtonItem?) {
         if let completionBlock = completionBlock {
-            completionBlock(.cancel, nil)
+            completionBlock(.cancel, nil, nil)
         } else {
             dismiss(animated: true, completion: nil)
         }

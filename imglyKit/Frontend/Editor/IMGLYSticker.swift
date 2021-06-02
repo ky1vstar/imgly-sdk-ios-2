@@ -7,14 +7,48 @@
 //
 
 import UIKit
+import Gifu
+import ImageIO
 
 open class IMGLYSticker: NSObject {
-    public let image: UIImage
-    public let thumbnail: UIImage?
+    public let image: UIImage?
+    public let dataGif: Data?
+    public var resultImage: UIImage?
     
-    public init(image: UIImage, thumbnail: UIImage?) {
+    public init(image: UIImage? = nil, dataGif: Data? = nil) {
         self.image = image
-        self.thumbnail = thumbnail
+        self.dataGif = dataGif
+        self.resultImage = image
         super.init()
     }
+    
+    var animatedFrames: [UIImage] {
+        guard let dataGif = self.dataGif else {
+            return []
+        }
+        
+        let gifOptions = [
+            kCGImageSourceShouldAllowFloat as String : true as NSNumber,
+            kCGImageSourceCreateThumbnailWithTransform as String : true as NSNumber,
+            kCGImageSourceCreateThumbnailFromImageAlways as String : true as NSNumber
+        ] as CFDictionary
+        
+        guard let imageSource = CGImageSourceCreateWithData(dataGif as CFData, gifOptions) else {
+            debugPrint("Cannot create image source with data!")
+            return []
+        }
+        
+        let framesCount = CGImageSourceGetCount(imageSource)
+        var frameList = [UIImage]()
+        
+        for index in 0 ..< framesCount {
+            if let cgImageRef = CGImageSourceCreateImageAtIndex(imageSource, index, nil) {
+                let uiImageRef = UIImage(cgImage: cgImageRef)
+                frameList.append(uiImageRef)
+            }
+        }
+        return frameList
+    }
+  
 }
+

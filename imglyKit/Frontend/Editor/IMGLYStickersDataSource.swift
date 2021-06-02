@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Gifu
 
 public protocol IMGLYStickersDataSourceDelegate: class, UICollectionViewDataSource {
     var stickers: [IMGLYSticker] { get }
@@ -16,34 +17,7 @@ open class IMGLYStickersDataSource: NSObject, IMGLYStickersDataSourceDelegate {
     public let stickers: [IMGLYSticker]
     
     override init() {
-        let stickerFiles = [
-            "glasses_nerd",
-            "glasses_normal",
-            "glasses_shutter_green",
-            "glasses_shutter_yellow",
-            "glasses_sun",
-            "hat_cap",
-            "hat_party",
-            "hat_sherrif",
-            "hat_zylinder",
-            "heart",
-            "mustache_long",
-            "mustache1",
-            "mustache2",
-            "mustache3",
-            "pipe",
-            "snowflake",
-            "star"
-        ]
-        
-        stickers = stickerFiles.map { (file: String) -> IMGLYSticker? in
-            if let image = UIImage(named: file, in: Bundle(for: IMGLYStickersDataSource.self), compatibleWith: nil) {
-                let thumbnail = UIImage(named: file + "_thumbnail", in: Bundle(for: IMGLYStickersDataSource.self), compatibleWith: nil)
-                return IMGLYSticker(image: image, thumbnail: thumbnail)
-            }
-            
-            return nil
-            }.filter { $0 != nil }.map { $0! }
+        stickers = IMGLYStrickersManager.shared.dataArray.filter { $0 != nil }.map { $0! }
         
         super.init()
     }
@@ -63,9 +37,14 @@ open class IMGLYStickersDataSource: NSObject, IMGLYStickersDataSourceDelegate {
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StickersCollectionViewCellReuseIdentifier, for: indexPath) as! IMGLYStickerCollectionViewCell
-        
-        cell.imageView.image = stickers[indexPath.row].thumbnail ?? stickers[indexPath.row].image
-        
+       
+         if let image = stickers[indexPath.row].image {
+            cell.imageView.image = image
+        } else if let dataGif = stickers[indexPath.row].dataGif {
+            cell.imageView.prepareForAnimation(withGIFData: dataGif)
+            cell.imageView.startAnimatingGIF()
+        }
+      
         return cell
     }
 }

@@ -108,15 +108,15 @@ open class IMGLYCameraViewController: UIViewController {
         return button
         }()
     
-    open fileprivate(set) lazy var cameraRollButton: UIButton = {
+    open fileprivate(set) lazy var doneButton: UIButton = {
         let bundle = Bundle(for: type(of: self))
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "nonePreview", in: bundle, compatibleWith: nil), for: [])
-        button.imageView?.contentMode = .scaleAspectFill
-        button.layer.cornerRadius = 3
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(IMGLYCameraViewController.showCameraRoll(_:)), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.setTitle(NSLocalizedString("camera-view-controller.camera.done", tableName: nil, bundle: bundle, value: "", comment: "") , for: .normal)
+        button.contentHorizontalAlignment = .right
+        button.addTarget(self, action: #selector(IMGLYCameraViewController.dismissCamera(_:)), for: .touchUpInside)
+        button.isHidden = true
         return button
         }()
     
@@ -146,6 +146,7 @@ open class IMGLYCameraViewController: UIViewController {
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(IMGLYCameraViewController.toggleFilters(_:)), for: .touchUpInside)
         button.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
+        button.isHidden = currentRecordingMode == .photo
         return button
         }()
     
@@ -223,7 +224,8 @@ open class IMGLYCameraViewController: UIViewController {
         didSet {
             flashButton.isEnabled = buttonsEnabled
             switchCameraButton.isEnabled = buttonsEnabled
-            cameraRollButton.isEnabled = buttonsEnabled
+            doneButton.isEnabled = buttonsEnabled
+            //cameraRollButton.isEnabled = buttonsEnabled
             actionButtonContainer.isUserInteractionEnabled = buttonsEnabled
             
             for recordingModeSelectionButton in recordingModeSelectionButtons {
@@ -273,7 +275,7 @@ open class IMGLYCameraViewController: UIViewController {
             filterSelectionController.endAppearanceTransition()
         }
         
-        setLastImageFromRollAsPreview()
+        //setLastImageFromRollAsPreview()
         cameraController?.startCamera()
     }
     
@@ -340,9 +342,10 @@ open class IMGLYCameraViewController: UIViewController {
         view.addSubview(filterSelectionController.view)
         
         topControlsView.addSubview(flashButton)
+        topControlsView.addSubview(doneButton)
         topControlsView.addSubview(switchCameraButton)
         
-        bottomControlsView.addSubview(cameraRollButton)
+        //bottomControlsView.addSubview(cameraRollButton)
         bottomControlsView.addSubview(actionButtonContainer)
         bottomControlsView.addSubview(filterSelectionButton)
         
@@ -363,7 +366,8 @@ open class IMGLYCameraViewController: UIViewController {
             "filterSelectionView" : filterSelectionController.view,
             "flashButton" : flashButton,
             "switchCameraButton" : switchCameraButton,
-            "cameraRollButton" : cameraRollButton,
+            "doneButton" : doneButton,
+            //"cameraRollButton" : cameraRollButton,
             "actionButtonContainer" : actionButtonContainer,
             "filterSelectionButton" : filterSelectionButton,
             "filterIntensitySlider" : filterIntensitySlider
@@ -405,9 +409,10 @@ open class IMGLYCameraViewController: UIViewController {
     }
     
     fileprivate func configureTopControlsConstraintsWithMetrics(_ metrics: [String : AnyObject], views: [String : AnyObject]) {
-        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==topControlMargin)-[flashButton(>=topControlMinWidth)]-(>=topControlMargin)-[switchCameraButton(>=topControlMinWidth)]-(==topControlMargin)-|", options: [], metrics: metrics, views: views))
+        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==topControlMargin)-[flashButton(>=topControlMinWidth)]-(>=topControlMargin)-[switchCameraButton(>=topControlMinWidth)]-(==topControlMargin)-[doneButton(>=topControlMinWidth)]-(==topControlMargin)-|", options: [], metrics: metrics, views: views))
         topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[flashButton]|", options: [], metrics: nil, views: views))
         topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[switchCameraButton]|", options: [], metrics: nil, views: views))
+        topControlsView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[doneButton]|", options: [], metrics: nil, views: views))
     }
     
     fileprivate func configureBottomControlsConstraintsWithMetrics(_ metrics: [String : AnyObject], views: [String : AnyObject]) {
@@ -430,10 +435,10 @@ open class IMGLYCameraViewController: UIViewController {
         }
         
         // CameraRollButton
-        cameraRollButton.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: BottomControlSize.width))
+        /*cameraRollButton.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: BottomControlSize.width))
         cameraRollButton.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: BottomControlSize.height))
         bottomControlsView.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .centerY, relatedBy: .equal, toItem: actionButtonContainer, attribute: .centerY, multiplier: 1, constant: 0))
-        bottomControlsView.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .left, relatedBy: .equal, toItem: bottomControlsView, attribute: .left, multiplier: 1, constant: 20))
+        bottomControlsView.addConstraint(NSLayoutConstraint(item: cameraRollButton, attribute: .left, relatedBy: .equal, toItem: bottomControlsView, attribute: .left, multiplier: 1, constant: 20))*/
         
         // ActionButtonContainer
         actionButtonContainer.addConstraint(NSLayoutConstraint(item: actionButtonContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 70))
@@ -634,7 +639,7 @@ open class IMGLYCameraViewController: UIViewController {
         }
     }
     
-    open func setLastImageFromRollAsPreview() {
+    /*open func setLastImageFromRollAsPreview() {
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
@@ -645,7 +650,7 @@ open class IMGLYCameraViewController: UIViewController {
                 self.cameraRollButton.setImage(result, for: [])
             }
         }
-    }
+    }*/
     
     // MARK: - Targets
     
@@ -656,6 +661,7 @@ open class IMGLYCameraViewController: UIViewController {
                 
                 if let currentIndex = currentIndex, currentIndex < recordingModes.count - 1 {
                     currentRecordingMode = recordingModes[currentIndex + 1]
+                    self.filterSelectionButton.isHidden = currentRecordingMode == .photo
                     return
                 }
             } else if gestureRecognizer.direction == .right {
@@ -663,6 +669,7 @@ open class IMGLYCameraViewController: UIViewController {
                 
                 if let currentIndex = currentIndex, currentIndex > 0 {
                     currentRecordingMode = recordingModes[currentIndex - 1]
+                    self.filterSelectionButton.isHidden = currentRecordingMode == .photo
                     return
                 }
             }
@@ -673,11 +680,12 @@ open class IMGLYCameraViewController: UIViewController {
             
             if let buttonIndex = buttonIndex {
                 currentRecordingMode = recordingModes[buttonIndex]
+                self.filterSelectionButton.isHidden = currentRecordingMode == .photo
                 return
             }
         }
     }
-    
+
     @objc fileprivate func hideFilterIntensitySlider(_ timer: Timer?) {
         UIView.animate(withDuration: 0.25, animations: {
             self.filterIntensitySlider.alpha = 0
@@ -696,6 +704,10 @@ open class IMGLYCameraViewController: UIViewController {
     
     @objc open func switchCamera(_ sender: UIButton?) {
         cameraController?.toggleCameraPosition()
+    }
+    
+    @objc open func dismissCamera(_ sender: UIButton?) {
+        self.dismiss(animated: true)
     }
     
     @objc open func showCameraRoll(_ sender: UIButton?) {
@@ -777,7 +789,7 @@ open class IMGLYCameraViewController: UIViewController {
     
     // MARK: - Completion
     
-    fileprivate func editorCompletionBlock(_ result: IMGLYEditorResult, image: UIImage?) {
+    fileprivate func editorCompletionBlock(_ result: IMGLYEditorResult, image: UIImage?, url: URL?) {
         if let image = image, result == .done {
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(IMGLYCameraViewController.image(_:didFinishSavingWithError:contextInfo:)), nil)
         }
@@ -786,7 +798,7 @@ open class IMGLYCameraViewController: UIViewController {
     }
     
     @objc fileprivate func image(_ image: UIImage, didFinishSavingWithError: NSError, contextInfo:UnsafeRawPointer) {
-        setLastImageFromRollAsPreview()
+        //setLastImageFromRollAsPreview()
     }
 
 }
@@ -849,6 +861,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
         DispatchQueue.main.async {
             self.updateFlashButton()
             self.switchCameraButton.isHidden = !cameraController.moreThanOneCameraPresent
+            self.doneButton.isHidden = self.switchCameraButton.isHidden
         }
     }
     
@@ -902,7 +915,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
     
     public func cameraController(_ cameraController: IMGLYCameraController, didSwitchToRecordingMode recordingMode: IMGLYRecordingMode) {
         DispatchQueue.main.async {
-            self.setLastImageFromRollAsPreview()
+            //self.setLastImageFromRollAsPreview()
             self.buttonsEnabled = true
             
             if recordingMode == .photo {
@@ -939,7 +952,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
                 previousActionButton.alpha = 0
             }
             
-            self.cameraRollButton.alpha = self.currentRecordingMode == .video ? 0 : 1
+            //self.cameraRollButton.alpha = self.currentRecordingMode == .video ? 0 : 1
             
             self.bottomControlsView.layoutIfNeeded()
         }
@@ -975,6 +988,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
                 self.swipeRightGestureRecognizer.isEnabled = false
                 
                 self.switchCameraButton.alpha = 0
+                self.doneButton.alpha = 0
                 self.filterSelectionButton.alpha = 0
                 self.bottomControlsView.backgroundColor = UIColor.clear
                 
@@ -991,6 +1005,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
             self.swipeRightGestureRecognizer.isEnabled = true
             
             self.switchCameraButton.alpha = 1
+            self.doneButton.alpha = 1
             self.filterSelectionButton.alpha = 1
             self.bottomControlsView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
             

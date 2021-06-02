@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Gifu
+import AVFoundation
 
 let StickersCollectionViewCellSize = CGSize(width: 90, height: 90)
 let StickersCollectionViewCellReuseIdentifier = "StickersCollectionViewCell"
@@ -22,6 +24,58 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         return view
         }()
     
+    open fileprivate(set) lazy var stickerSelectorContainerView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentView.layer.borderColor = UIColor.white.cgColor
+        view.contentView.layer.borderWidth = 1.5
+        return view
+    }()
+    
+    open fileprivate(set) lazy var titleContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 36.0/255, green: 36.0/255, blue: 36.0/255, alpha: 1.0)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+        view.addSubview(closeButton)
+        let views: [String : AnyObject] = ["titleLabel" : titleLabel,
+                                           "closeButton" : closeButton]
+        let metrics: [String : AnyObject] = [
+            "btnHeight" : 35 as AnyObject
+        ]
+       
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-[titleLabel]-|", options: [], metrics: nil, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[titleLabel]-|", options: [], metrics: nil, views: views))
+        
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "[closeButton(==btnHeight)]-|", options: [], metrics: metrics, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[closeButton]-|", options: [], metrics: metrics, views: views))
+        return view
+    }()
+    
+    open fileprivate(set) lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        let bundle = Bundle(for: type(of: self))
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textAlignment = .center
+        label.textColor = UIColor.white
+        label.text = NSLocalizedString("stickers-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
+        return label
+        }()
+    
+    open fileprivate(set) lazy var closeButton: UIButton = {
+        let bundle = Bundle(for: type(of: self))
+        let button = UIButton()
+        button.contentHorizontalAlignment = .center
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(IMGLYStickersEditorViewController.closeBtn(_:)), for: .touchUpInside)
+        return button
+        }()
+ 
+    
     fileprivate var draggedView: UIView?
     fileprivate var tempStickerCopy = [CIFilter]()
     
@@ -29,12 +83,15 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     open override func tappedDone(_ sender: UIBarButtonItem?) {
         var addedStickers = false
-        
+        var containsGif: Bool = false
+
         for view in stickersClipView.subviews {
-            if let view = view as? UIImageView {
+            if let view = view as? IMGLYGIFImageView {
                 if let image = view.image {
                     let stickerFilter = IMGLYInstanceFactory.stickerFilter()
-                    stickerFilter.sticker = image
+                    let sticker = view.sticker
+                    sticker?.resultImage = image
+                    stickerFilter.sticker = sticker
                     let center = CGPoint(x: view.center.x / stickersClipView.frame.size.width,
                                          y: view.center.y / stickersClipView.frame.size.height)
                     
@@ -47,12 +104,16 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
                     fixedFilterStack.stickerFilters.append(stickerFilter)
                     addedStickers = true
                 }
+                if view.isAnimatingGIF {
+                    containsGif = true
+                }
             }
         }
-        
+        IMGLYStrickersManager.shared.addedGifStickers = containsGif
         if addedStickers {
             updatePreviewImageWithCompletion {
                 self.stickersClipView.removeFromSuperview()
+                IMGLYStrickersManager.shared.stickersClipView = self.stickersClipView
                 super.tappedDone(sender)
             }
         } else {
@@ -79,9 +140,9 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         let bundle = Bundle(for: type(of: self))
         navigationItem.title = NSLocalizedString("stickers-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
-        configureStickersCollectionView()
         configureStickersClipView()
         configureGestureRecognizers()
+        configureStickersCollectionView()
         backupStickers()
         fixedFilterStack.stickerFilters.removeAll()
     }
@@ -102,8 +163,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     fileprivate func configureStickersCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = StickersCollectionViewCellSize
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 10
         
@@ -111,12 +171,27 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = stickersDataSource
         collectionView.delegate = self
+        collectionView.backgroundColor = .clear
         collectionView.register(IMGLYStickerCollectionViewCell.self, forCellWithReuseIdentifier: StickersCollectionViewCellReuseIdentifier)
+        view.addSubview(stickerSelectorContainerView)
+        stickerSelectorContainerView.contentView.addSubview(collectionView)
+        stickerSelectorContainerView.contentView.addSubview(titleContainerView)
         
-        let views = [ "collectionView" : collectionView ]
-        bottomContainerView.addSubview(collectionView)
-        bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: nil, views: views))
-        bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]|", options: [], metrics: nil, views: views))
+        let views: [String : AnyObject] = ["collectionView" : collectionView,
+                                           "stickerSelectorContainerView" : stickerSelectorContainerView,
+                                           "titleContainerView" : titleContainerView]
+        
+        let metrics: [String : AnyObject] = [
+            "margin" : 40 as AnyObject,
+            "titleHeight" : 35 as AnyObject,
+        ]
+        
+        stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: metrics, views: views))
+        stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[titleContainerView]|", options: [], metrics: metrics, views: views))
+        stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]-[titleContainerView(==titleHeight)]|", options: [], metrics: metrics, views: views))
+        
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==margin)-[stickerSelectorContainerView]-(==margin)-|", options: [], metrics: metrics, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(==margin)-[stickerSelectorContainerView]-(==margin)-|", options: [], metrics: metrics, views: views))
     }
     
     fileprivate func configureStickersClipView() {
@@ -223,6 +298,9 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         }
     }
     
+    @objc open func closeBtn(_ sender: UIButton?) {
+        stickerSelectorContainerView.removeFromSuperview()
+    }
     
     // MARK: - sticker object restore
     
@@ -234,11 +312,11 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     fileprivate func addStickerImagesFromStickerFilters(_ stickerFilters: [CIFilter]) {
         for element in stickerFilters {
-            guard let stickerFilter = element as? IMGLYStickerFilter else {
+            guard let stickerFilter = element as? IMGLYStickerFilter, let sticker = stickerFilter.sticker else {
                 return
             }
-            
-            let imageView = UIImageView(image: stickerFilter.sticker)
+       
+            let imageView = createImageView(sticker: sticker)
             imageView.isUserInteractionEnabled = true
             
             let size = stickerFilter.absolutStickerSizeForImageSize(stickersClipView.bounds.size)
@@ -261,9 +339,10 @@ extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
     // add selected sticker
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sticker = stickersDataSource.stickers[indexPath.row]
-        let imageView = UIImageView(image: sticker.image)
+        
+        let imageView = createImageView(sticker: sticker)
+        imageView.frame.size = initialSizeForStickerImage(imageView.image ?? UIImage())
         imageView.isUserInteractionEnabled = true
-        imageView.frame.size = initialSizeForStickerImage(sticker.image)
         imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
         stickersClipView.addSubview(imageView)
         imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
@@ -271,6 +350,21 @@ extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
             imageView.transform = CGAffineTransform.identity
             }, completion: nil)
+    }
+    
+    private func createImageView(sticker: IMGLYSticker) -> IMGLYGIFImageView {
+        if let image = sticker.image {
+            let imageView = IMGLYGIFImageView(image: image)
+            imageView.sticker = sticker
+            return imageView
+        } else if let dataGif = sticker.dataGif {
+            let imageView = IMGLYGIFImageView()
+            imageView.prepareForAnimation(withGIFData: dataGif)
+            imageView.startAnimatingGIF()
+            imageView.sticker = sticker
+            return imageView
+        }
+        return  IMGLYGIFImageView()
     }
 }
 

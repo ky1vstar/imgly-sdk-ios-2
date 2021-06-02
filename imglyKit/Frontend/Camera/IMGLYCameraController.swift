@@ -194,31 +194,6 @@ open class IMGLYCameraController: NSObject {
         return nil
     }
     
-    fileprivate func checkSDKVersion() {
-        let appIdentifier = Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String
-        if let appIdentifier = appIdentifier, let url = URL(string: "https://photoeditorsdk.com/version.json?type=ios&app=\(appIdentifier)") {
-            let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-                if let data = data {
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject]
-                        
-                        if let json = json, let version = json["version"] as? String, let versionComponents = self.versionComponentsFromString(version) {
-                            let remoteVersion = IMGLYSDKVersion(majorVersion: versionComponents.majorVersion, minorVersion: versionComponents.minorVersion, patchVersion: versionComponents.patchVersion)
-                            
-                            if CurrentSDKVersion < remoteVersion {
-                                print("Your version of the img.ly SDK is outdated. You are using version \(CurrentSDKVersion), the latest available version is \(remoteVersion). Please consider updating.")
-                            }
-                        }
-                    } catch {
-                        
-                    }
-                }
-            }) 
-            
-            task.resume()
-        }
-    }
-    
     // MARK: - Authorization
     
     open func checkDeviceAuthorizationStatus() {
@@ -703,7 +678,7 @@ open class IMGLYCameraController: NSObject {
             return
         }
         
-        checkSDKVersion()
+        //checkSDKVersion()
         checkDeviceAuthorizationStatus()
         
         guard let glContext = EAGLContext(api: .openGLES2) else {
@@ -737,8 +712,8 @@ open class IMGLYCameraController: NSObject {
             self.delegate?.cameraControllerDidCompleteSetup?(self)
         }
         
-        setupFocusIndicator()
-        setupMaskLayers()
+        //setupFocusIndicator()
+        //setupMaskLayers()
         
         setupComplete = true
     }
