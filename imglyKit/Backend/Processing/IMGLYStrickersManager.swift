@@ -51,8 +51,11 @@ open class IMGLYStrickersManager {
         stickersClipView.subviews.forEach({ (subview) in
             
             if let gifView = subview as? IMGLYGIFImageView, gifView.isAnimatingGIF {
-                let framesArray = gifView.sticker?.animatedFrames
-                framesPos.append(ImagesPosition(imageView: gifView, images: framesArray!))
+                if let framesArray = gifView.sticker?.animatedFrames {
+                    framesPos.append(ImagesPosition(imageView: gifView, images: framesArray))
+                } else {
+                    print("framesArray is empty")
+                }
             }
         })
     

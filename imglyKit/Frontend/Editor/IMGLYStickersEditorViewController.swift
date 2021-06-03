@@ -174,6 +174,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         collectionView.backgroundColor = .clear
         collectionView.register(IMGLYStickerCollectionViewCell.self, forCellWithReuseIdentifier: StickersCollectionViewCellReuseIdentifier)
         view.addSubview(stickerSelectorContainerView)
+        navigationItem.rightBarButtonItem?.isEnabled = false
         stickerSelectorContainerView.contentView.addSubview(collectionView)
         stickerSelectorContainerView.contentView.addSubview(titleContainerView)
         
@@ -188,7 +189,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         
         stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: metrics, views: views))
         stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[titleContainerView]|", options: [], metrics: metrics, views: views))
-        stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]-[titleContainerView(==titleHeight)]|", options: [], metrics: metrics, views: views))
+        stickerSelectorContainerView.contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[titleContainerView(==titleHeight)]-[collectionView]|", options: [], metrics: metrics, views: views))
         
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|-(==margin)-[stickerSelectorContainerView]-(==margin)-|", options: [], metrics: metrics, views: views))
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(==margin)-[stickerSelectorContainerView]-(==margin)-|", options: [], metrics: metrics, views: views))
@@ -300,6 +301,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     @objc open func closeBtn(_ sender: UIButton?) {
         stickerSelectorContainerView.removeFromSuperview()
+        navigationItem.rightBarButtonItem?.isEnabled = true
     }
     
     // MARK: - sticker object restore

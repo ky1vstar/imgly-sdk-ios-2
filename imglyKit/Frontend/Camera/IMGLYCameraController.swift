@@ -12,44 +12,6 @@ import OpenGLES
 import GLKit
 import CoreMotion
 
-struct IMGLYSDKVersion: Comparable, CustomStringConvertible {
-    let majorVersion: Int
-    let minorVersion: Int
-    let patchVersion: Int
-    
-    var description: String {
-        return "\(majorVersion).\(minorVersion).\(patchVersion)"
-    }
-}
-
-func ==(lhs: IMGLYSDKVersion, rhs: IMGLYSDKVersion) -> Bool {
-    return (lhs.majorVersion == rhs.majorVersion) && (lhs.minorVersion == rhs.minorVersion) && (lhs.patchVersion == rhs.patchVersion)
-}
-
-func <(lhs: IMGLYSDKVersion, rhs: IMGLYSDKVersion) -> Bool {
-    if lhs.majorVersion < rhs.majorVersion {
-        return true
-    } else if lhs.majorVersion > rhs.majorVersion {
-        return false
-    }
-    
-    if lhs.minorVersion < rhs.minorVersion {
-        return true
-    } else if lhs.minorVersion > rhs.minorVersion {
-        return false
-    }
-    
-    if lhs.patchVersion < rhs.patchVersion {
-        return true
-    } else if lhs.patchVersion > rhs.patchVersion {
-        return false
-    }
-    
-    return false
-}
-
-let CurrentSDKVersion = IMGLYSDKVersion(majorVersion: 2, minorVersion: 4, patchVersion: 0)
-
 private let kIMGLYIndicatorSize = CGFloat(75)
 private var CapturingStillImageContext = 0
 private var SessionRunningAndDeviceAuthorizedContext = 0
