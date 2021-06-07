@@ -229,14 +229,17 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
                     filteredHighResolutionImage = IMGLYPhotoProcessor.processWithUIImage(highResolutionImage, filters: self.fixedFilterStack.activeFilters)
                     
                     DispatchQueue.main.async {
+                        IMGLYStrickersManager.shared.addedGifStickers = false
                         completionBlock(.done, filteredHighResolutionImage, url)
                         sender?.isEnabled = true
                     }
                 }
             } else {
+                IMGLYStrickersManager.shared.addedGifStickers = false
                 completionBlock(.done, filteredHighResolutionImage, url)
             }
         } else {
+            IMGLYStrickersManager.shared.addedGifStickers = false
             dismiss(animated: true, completion: nil)
         }
     }
@@ -253,8 +256,6 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         } else {
             self.prepareImage(sender, url: nil)
         }
-        
-        
     }
     
     @objc fileprivate func cancelTapped(_ sender: UIBarButtonItem?) {

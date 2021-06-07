@@ -348,7 +348,8 @@ extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
         imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
         stickersClipView.addSubview(imageView)
         imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
-        
+        self.stickerSelectorContainerView.removeFromSuperview()
+        navigationItem.rightBarButtonItem?.isEnabled = true
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
             imageView.transform = CGAffineTransform.identity
             }, completion: nil)
