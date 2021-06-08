@@ -18,6 +18,20 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     // MARK: - Properties
     
     open var stickersDataSource = IMGLYStickersDataSource()
+    var binView = UIView()
+    var binZone: CGRect?
+    var rotated: CGFloat = 0
+    let impact = UIImpactFeedbackGenerator()
+    var binCenter: CGPoint? {
+        if let binZone = binZone {
+            return CGPoint(x: binZone.origin.x + binZone.width/2, y: binZone.origin.y + binZone.height/2)
+        }
+        return nil
+    }
+    
+    var currentSize: CGSize?
+    var distanceFromTouch: CGSize?
+    
     open fileprivate(set) lazy var stickersClipView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
@@ -145,6 +159,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         configureStickersCollectionView()
         backupStickers()
         fixedFilterStack.stickerFilters.removeAll()
+        setupBinView()
     }
     
     open override func viewDidAppear(_ animated: Bool) {
@@ -222,9 +237,11 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         
         switch recognizer.state {
         case .began:
+            self.binZone = binView.frame
             draggedView = stickersClipView.hitTest(location, with: nil) as? UIImageView
             if let draggedView = draggedView {
                 stickersClipView.bringSubviewToFront(draggedView)
+                self.isMoving()
             }
         case .changed:
             if let draggedView = draggedView {
@@ -232,12 +249,122 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
             }
             
             recognizer.setTranslation(CGPoint.zero, in: stickersClipView)
+            let touch = recognizer.location(ofTouch: 0, in: stickersClipView)
+            
+            if let binZone = binZone, isInBinZone(touch) {
+                animateInBin(binZone: binZone, touch: touch)
+            } else {
+                animateOutBinFrom(touch: touch)
+            }
+            
         case .cancelled, .ended:
+            if isInBinZone(self.draggedView?.center) {
+                removeStickers()
+            }
+            self.isStopping()
             draggedView = nil
         default:
             break
         }
     }
+
+    func setupBinView() {
+       
+        let imageView = UIImageView(image: UIImage(systemName: "trash"))
+        
+        imageView.tintColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        binView.addSubview(imageView)
+        imageView.centerXAnchor.constraint(equalTo: binView.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: binView.centerYAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+
+        binView.translatesAutoresizingMaskIntoConstraints = false
+        self.stickersClipView.addSubview(binView)
+        binView.centerXAnchor.constraint(equalTo: self.stickersClipView.centerXAnchor).isActive = true
+        binView.bottomAnchor.constraint(equalTo: self.stickersClipView.bottomAnchor, constant: -2.5).isActive = true
+        binView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        binView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        binView.layer.cornerRadius = 25
+        binView.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        
+        binView.isHidden = true
+    }
+    
+    func isMoving() {
+        binView.isHidden = false
+        self.stickersClipView.bringSubviewToFront(binView)
+    }
+    
+    func isStopping() {
+        binView.isHidden = true
+    }
+    
+    func animateInBin(binZone: CGRect, touch: CGPoint) {
+        if currentSize == nil {
+            //Rotate first
+            let zKeyPath = "layer.presentationLayer.transform.rotation.z"
+            let imageRotation = (self.draggedView?.value(forKeyPath: zKeyPath) as? NSNumber)?.floatValue ?? 0.0
+            self.rotated = CGFloat(imageRotation)
+            self.draggedView?.transform = self.draggedView?.transform.rotated(by: -self.rotated) ?? .identity
+            currentSize = self.draggedView?.frame.size
+            distanceFromTouch = CGSize(width: touch.x-(self.draggedView?.frame.origin.x ?? 0), height: touch.y-(self.draggedView?.frame.origin.y ?? 0))
+            impact.impactOccurred()
+        }
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.draggedView?.frame.size.width = 30
+            self.draggedView?.frame.size.height = 30
+            self.draggedView?.center = self.binCenter!
+        })
+    }
+    
+    func animateOutBinFrom(touch: CGPoint) {
+        
+        if let currentSize = self.currentSize, let distanceFromTouch = self.distanceFromTouch {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.draggedView?.frame.origin = CGPoint(x: touch.x-distanceFromTouch.width, y: touch.y-distanceFromTouch.height)
+                self.draggedView?.frame.size.width = currentSize.width
+                self.draggedView?.frame.size.height = currentSize.height
+                self.draggedView?.transform = self.draggedView?.transform.rotated(by: self.rotated) ?? .identity
+                
+            })
+            self.currentSize = nil
+            self.distanceFromTouch = nil
+            self.rotated = 0
+        }
+    }
+    
+    func isInBinZone(_ touch: CGPoint?) -> Bool {
+        guard let binCenter = binCenter,
+              let touch = touch else { return false }
+        if touch.x > binCenter.x - 40 && touch.x < binCenter.x + 40 && touch.y > binCenter.y - 40 && touch.y < binCenter.y + 40 {
+            return true
+        }
+        return false
+    }
+    
+    fileprivate func removeStickers() {
+        if let draggedView = draggedView as? IMGLYGIFImageView {
+            draggedView.removeFromSuperview()
+            self.updateAddedGifStickers()
+        }
+    }
+    
+    fileprivate func updateAddedGifStickers() {
+        var containsGif = false
+        for view in stickersClipView.subviews {
+            if  let view = view as? IMGLYGIFImageView,
+                view.isAnimatingGIF {
+                containsGif = true
+            }
+            
+        }
+        IMGLYStrickersManager.shared.addedGifStickers = containsGif
+    }
+   
     
     @objc fileprivate func pinched(_ recognizer: UIPinchGestureRecognizer) {
         if recognizer.numberOfTouches == 2 {
