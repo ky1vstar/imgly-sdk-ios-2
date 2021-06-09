@@ -16,12 +16,14 @@ let StickersCollectionViewCellReuseIdentifier = "StickersCollectionViewCell"
 open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
 
     // MARK: - Properties
-    
+    private let ButtonCollectionViewCellReuseIdentifier = "ButtonCollectionViewCell"
+    private let ButtonCollectionViewCellSize = CGSize(width: 66, height: 90)
     open var stickersDataSource = IMGLYStickersDataSource()
     var binView = UIView()
     var binZone: CGRect?
     var rotated: CGFloat = 0
     let impact = UIImpactFeedbackGenerator()
+    let StickersCollectionViewTag = 99
     var binCenter: CGPoint? {
         if let binZone = binZone {
             return CGPoint(x: binZone.origin.x + binZone.width/2, y: binZone.origin.y + binZone.height/2)
@@ -93,6 +95,85 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     fileprivate var draggedView: UIView?
     fileprivate var tempStickerCopy = [CIFilter]()
     
+    open lazy var actionButtons: [IMGLYActionButton] = {
+        let bundle = Bundle(for: type(of: self))
+        var handlers = [IMGLYActionButton]()
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.magic", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_magic", in: bundle, compatibleWith: nil),
+                selectedImage: UIImage(named: "icon_option_magic_active", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.magic) },
+                showSelection: { [unowned self] in return self.fixedFilterStack.enhancementFilter._enabled }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.text", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_text", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.text) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.stickers", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_sticker", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.stickers) }, isEnabled: true))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.filter", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_filters", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.filter) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.crop", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_crop", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.crop) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.orientation", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_orientation", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.orientation) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.brightness", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_brightness", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.brightness) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.contrast", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_contrast", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.contrast) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.saturation", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_saturation", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.saturation) }, isEnabled: false))
+        
+        handlers.append(
+            IMGLYActionButton(
+                title: NSLocalizedString("main-editor.button.focus", tableName: nil, bundle: bundle, value: "", comment: ""),
+                image: UIImage(named: "icon_option_focus", in: bundle, compatibleWith: nil),
+                handler: { [unowned self] in self.subEditorButtonPressed(.focus) }, isEnabled: false))
+        
+        return handlers
+    }()
+    
+    fileprivate func subEditorButtonPressed(_ buttonType: IMGLYMainMenuButtonType) {
+        UIView.transition(with: self.stickerSelectorContainerView, duration: 0.25,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            self.stickerSelectorContainerView.isHidden = false
+                            self.bottomContainerView.isHidden = true
+                          })
+    }
+    
+    
     // MARK: - SubEditorViewController
     
     open override func tappedDone(_ sender: UIBarButtonItem?) {
@@ -160,6 +241,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         backupStickers()
         fixedFilterStack.stickerFilters.removeAll()
         setupBinView()
+        configureMenuCollectionView()
     }
     
     open override func viewDidAppear(_ animated: Bool) {
@@ -175,6 +257,27 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     // MARK: - Configuration
     
+    fileprivate func configureMenuCollectionView() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.itemSize = ButtonCollectionViewCellSize
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.minimumLineSpacing = 0
+        
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(IMGLYButtonCollectionViewCell.self, forCellWithReuseIdentifier: ButtonCollectionViewCellReuseIdentifier)
+        
+        let views = [ "collectionView" : collectionView ]
+        bottomContainerView.addSubview(collectionView)
+        bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: nil, views: views))
+        bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]|", options: [], metrics: nil, views: views))
+        bottomContainerView.isHidden = true
+    }
+    
     fileprivate func configureStickersCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = StickersCollectionViewCellSize
@@ -184,6 +287,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
         
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.tag = StickersCollectionViewTag
         collectionView.dataSource = stickersDataSource
         collectionView.delegate = self
         collectionView.backgroundColor = .clear
@@ -427,8 +531,14 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     }
     
     @objc open func closeBtn(_ sender: UIButton?) {
-        stickerSelectorContainerView.removeFromSuperview()
-        navigationItem.rightBarButtonItem?.isEnabled = true
+        UIView.transition(with: self.bottomContainerView, duration: 0.25,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            self.stickerSelectorContainerView.isHidden = true
+                            self.navigationItem.rightBarButtonItem?.isEnabled = true
+                            self.bottomContainerView.isHidden = false
+                          })
+
     }
     
     // MARK: - sticker object restore
@@ -467,19 +577,31 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
 extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
     // add selected sticker
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sticker = stickersDataSource.stickers[indexPath.row]
-        
-        let imageView = createImageView(sticker: sticker)
-        imageView.frame.size = initialSizeForStickerImage(imageView.image ?? UIImage())
-        imageView.isUserInteractionEnabled = true
-        imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
-        stickersClipView.addSubview(imageView)
-        imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
-        self.stickerSelectorContainerView.removeFromSuperview()
-        navigationItem.rightBarButtonItem?.isEnabled = true
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
-            imageView.transform = CGAffineTransform.identity
-            }, completion: nil)
+        if collectionView.tag == StickersCollectionViewTag {
+            let sticker = stickersDataSource.stickers[indexPath.row]
+            
+            let imageView = createImageView(sticker: sticker)
+            imageView.frame.size = initialSizeForStickerImage(imageView.image ?? UIImage())
+            imageView.isUserInteractionEnabled = true
+            imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
+            stickersClipView.addSubview(imageView)
+            imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+            UIView.transition(with: self.bottomContainerView, duration: 0.25,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                                self.stickerSelectorContainerView.isHidden = true
+                                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                                self.bottomContainerView.isHidden = false
+                              })
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
+                imageView.transform = CGAffineTransform.identity
+                }, completion: nil)
+        } else {
+            let actionButton = actionButtons[indexPath.item]
+            if actionButton.isEnabled ?? false {
+                actionButton.handler()
+            }
+        }
     }
     
     private func createImageView(sticker: IMGLYSticker) -> IMGLYGIFImageView {
@@ -506,4 +628,37 @@ extension IMGLYStickersEditorViewController: UIGestureRecognizerDelegate {
         
         return false
     }
+}
+
+extension IMGLYStickersEditorViewController: UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return actionButtons.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ButtonCollectionViewCellReuseIdentifier, for: indexPath)
+        
+        if let buttonCell = cell as? IMGLYButtonCollectionViewCell {
+            let actionButton = actionButtons[indexPath.item]
+            
+            if let selectedImage = actionButton.selectedImage, let showSelectionBlock = actionButton.showSelection, showSelectionBlock() {
+                buttonCell.imageView.image = selectedImage.withRenderingMode(.alwaysTemplate)
+            } else {
+                buttonCell.imageView.image = actionButton.image?.withRenderingMode(.alwaysTemplate)
+            }
+            
+            buttonCell.textLabel.text = actionButton.title
+            if !(actionButton.isEnabled ?? false) {
+                buttonCell.imageView.tintColor = UIColor(red: 198.0/255, green: 198.0/255, blue: 198.0/255, alpha: 0.25)
+                buttonCell.textLabel.textColor = buttonCell.imageView.tintColor
+            } else {
+                buttonCell.imageView.tintColor = .white
+            }
+            
+        }
+        
+        return cell
+    }
+    
+   
 }

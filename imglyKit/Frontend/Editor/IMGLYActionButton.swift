@@ -17,12 +17,14 @@ open class IMGLYActionButton {
     let selectedImage: UIImage?
     let handler: IMGLYActionButtonHandler
     let showSelection: IMGLYShowSelectionBlock?
+    let isEnabled: Bool?
         
-    init(title: String?, image: UIImage?, selectedImage: UIImage? = nil, handler: @escaping IMGLYActionButtonHandler, showSelection: IMGLYShowSelectionBlock? = nil) {
+    init(title: String?, image: UIImage?, selectedImage: UIImage? = nil, handler: @escaping IMGLYActionButtonHandler, showSelection: IMGLYShowSelectionBlock? = nil, isEnabled: Bool? = true) {
         self.title = title
         self.image = image
         self.selectedImage = selectedImage
         self.handler = handler
         self.showSelection = showSelection
+        self.isEnabled = isEnabled
     }
 }
