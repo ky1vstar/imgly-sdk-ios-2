@@ -224,7 +224,6 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
             var filteredHighResolutionImage: UIImage?
             
             if let highResolutionImage = self.highResolutionImage {
-                sender?.isEnabled = false
                 PhotoProcessorQueue.async {
                     filteredHighResolutionImage = IMGLYPhotoProcessor.processWithUIImage(highResolutionImage, filters: self.fixedFilterStack.activeFilters)
                     
@@ -245,7 +244,7 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
     }
     
     override open func tappedDone(_ sender: UIBarButtonItem?) {
-        
+        sender?.isEnabled = false
         highResolutionImage = highResolutionImage?.imgly_normalizedImage
         //Generate video if contain Gif stickers
         if IMGLYStrickersManager.shared.addedGifStickers {

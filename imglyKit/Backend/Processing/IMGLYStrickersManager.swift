@@ -15,6 +15,7 @@ open class IMGLYStrickersManager {
 
     open var stickersClipView =  UIView()
     open var addedGifStickers = false
+    open var canAddGifStickers = false
    
     func generateVideo(_ image: UIImage, completionHandler: @escaping  (URL?) -> Void)  {
         let view = UIView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: self.stickersClipView.frame.size))

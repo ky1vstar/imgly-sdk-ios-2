@@ -551,11 +551,9 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     
     fileprivate func addStickerImagesFromStickerFilters(_ stickerFilters: [CIFilter]) {
         for element in stickerFilters {
-            guard let stickerFilter = element as? IMGLYStickerFilter, let sticker = stickerFilter.sticker else {
+            guard let stickerFilter = element as? IMGLYStickerFilter, let sticker = stickerFilter.sticker, let imageView = createImageView(sticker: sticker) else {
                 return
             }
-       
-            let imageView = createImageView(sticker: sticker)
             imageView.isUserInteractionEnabled = true
             
             let size = stickerFilter.absolutStickerSizeForImageSize(stickersClipView.bounds.size)
@@ -580,22 +578,30 @@ extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
         if collectionView.tag == StickersCollectionViewTag {
             let sticker = stickersDataSource.stickers[indexPath.row]
             
-            let imageView = createImageView(sticker: sticker)
-            imageView.frame.size = initialSizeForStickerImage(imageView.image ?? UIImage())
-            imageView.isUserInteractionEnabled = true
-            imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
-            stickersClipView.addSubview(imageView)
-            imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
-            UIView.transition(with: self.bottomContainerView, duration: 0.25,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                                self.stickerSelectorContainerView.isHidden = true
-                                self.navigationItem.rightBarButtonItem?.isEnabled = true
-                                self.bottomContainerView.isHidden = false
-                              })
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
-                imageView.transform = CGAffineTransform.identity
-                }, completion: nil)
+            if let imageView = createImageView(sticker: sticker) {
+                imageView.frame.size = initialSizeForStickerImage(imageView.image ?? UIImage())
+                imageView.isUserInteractionEnabled = true
+                imageView.center = CGPoint(x: stickersClipView.bounds.midX, y: stickersClipView.bounds.midY)
+                stickersClipView.addSubview(imageView)
+                imageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+                UIView.transition(with: self.bottomContainerView, duration: 0.25,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                                    self.stickerSelectorContainerView.isHidden = true
+                                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                                    self.bottomContainerView.isHidden = false
+                                  })
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [], animations: { () -> Void in
+                    imageView.transform = CGAffineTransform.identity
+                    }, completion: nil)
+            } else {
+                let bundle = Bundle(for: type(of: self))
+                let alertController = UIAlertController(title: nil, message:  NSLocalizedString("main-editor.stickers.not.authorized", tableName: nil, bundle: bundle, value: "", comment: ""), preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            
         } else {
             let actionButton = actionButtons[indexPath.item]
             if actionButton.isEnabled ?? false {
@@ -604,19 +610,20 @@ extension IMGLYStickersEditorViewController: UICollectionViewDelegate {
         }
     }
     
-    private func createImageView(sticker: IMGLYSticker) -> IMGLYGIFImageView {
+    private func createImageView(sticker: IMGLYSticker) -> IMGLYGIFImageView? {
         if let image = sticker.image {
             let imageView = IMGLYGIFImageView(image: image)
             imageView.sticker = sticker
             return imageView
-        } else if let dataGif = sticker.dataGif {
+        } else if let dataGif = sticker.dataGif,
+                  IMGLYStrickersManager.shared.canAddGifStickers{
             let imageView = IMGLYGIFImageView()
             imageView.prepareForAnimation(withGIFData: dataGif)
             imageView.startAnimatingGIF()
             imageView.sticker = sticker
             return imageView
         }
-        return  IMGLYGIFImageView()
+        return  nil
     }
 }
 
