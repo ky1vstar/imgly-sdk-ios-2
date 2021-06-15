@@ -29,7 +29,7 @@
 "main-editor.button.contrast" = "Contrast";
 "main-editor.button.saturation" = "Saturation";
 "main-editor.button.text" = "Text";
-"main-editor.stickers.not.authorized" = "You can not add a picture with stickers if you already have pictures in your post";
+"main-editor.stickers.not.authorized" = "You can not add a picture with gif stickers if you already have pictures in your post";
 
 // Filter Editor
 "filter-editor.title" = "Filter";
