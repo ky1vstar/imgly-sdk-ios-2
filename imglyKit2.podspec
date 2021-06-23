@@ -24,6 +24,5 @@ Pod::Spec.new do |s|
 
 	s.ios.frameworks = 'Accelerate', 'AVFoundation', 'CoreGraphics', 'CoreImage', 'CoreMotion', 'CoreText', 'Foundation', 'GLKit', 'MobileCoreServices', 'OpenGLES', 'Photos', 'UIKit'
 	s.osx.frameworks = 'Accelerate', 'AppKit', 'CoreGraphics', 'CoreText', 'Foundation', 'QuartzCore'
-  s.dependency 'Stickers'
   s.dependency 'Gifu'
 end
