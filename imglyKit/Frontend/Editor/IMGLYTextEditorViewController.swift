@@ -111,11 +111,15 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
     // MARK: - SubEditorViewController
     
     open override func tappedDone(_ sender: UIBarButtonItem?) {
-        fixedFilterStack.textFilter.text = textLabel.text ?? ""
-        fixedFilterStack.textFilter.color = textColor
-        fixedFilterStack.textFilter.fontName = fontName
-        fixedFilterStack.textFilter.frame = transformedTextFrame()
-        fixedFilterStack.textFilter.fontScaleFactor = currentTextSize / previewImageView.visibleImageFrame.size.height
+        let textFilter = IMGLYInstanceFactory.textFilter()
+        
+        textFilter.text = textLabel.text ?? ""
+        textFilter.color = textColor
+        textFilter.fontName = fontName
+        textFilter.frame = transformedTextFrame()
+        textFilter.fontScaleFactor = currentTextSize / previewImageView.visibleImageFrame.size.height
+        
+        fixedFilterStack.textFilters.append(textFilter)
         
         updatePreviewImageWithCompletion {
             super.tappedDone(sender)

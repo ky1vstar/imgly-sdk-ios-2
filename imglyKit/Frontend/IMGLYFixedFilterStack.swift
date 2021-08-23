@@ -30,18 +30,23 @@ open class IMGLYFixedFilterStack: NSObject {
     open var effectFilter = IMGLYInstanceFactory.effectFilterWithType(IMGLYFilterType.none)
     open var brightnessFilter = IMGLYInstanceFactory.colorAdjustmentFilter()
     open var tiltShiftFilter = IMGLYInstanceFactory.tiltShiftFilter()
-    open var textFilter = IMGLYInstanceFactory.textFilter()
+    open var textFilters = [IMGLYTextFilter]()
     open var stickerFilters = [CIFilter]()
     
     open var activeFilters: [CIFilter] {
-        var activeFilters: [CIFilter] = [enhancementFilter, orientationCropFilter, tiltShiftFilter, effectFilter, brightnessFilter, textFilter]
+        var activeFilters: [CIFilter] = [enhancementFilter, orientationCropFilter, tiltShiftFilter, effectFilter, brightnessFilter]
         activeFilters += stickerFilters
-        
+        activeFilters += textFilters
+
         return activeFilters
     }
     
     open var activeFiltersWithoutStickers: [CIFilter] {
-        return [enhancementFilter, orientationCropFilter, tiltShiftFilter, effectFilter, brightnessFilter, textFilter]
+        var activeFilters: [CIFilter] = [enhancementFilter, orientationCropFilter, tiltShiftFilter, effectFilter, brightnessFilter]
+        activeFilters += textFilters
+
+        return activeFilters
+
     }
     
     // MARK: - Initializers
@@ -59,7 +64,7 @@ extension IMGLYFixedFilterStack: NSCopying {
         copy.effectFilter = effectFilter.copy(with: zone) as! IMGLYResponseFilter
         copy.brightnessFilter = brightnessFilter.copy(with: zone) as! IMGLYContrastBrightnessSaturationFilter
         copy.tiltShiftFilter = tiltShiftFilter.copy(with: zone) as! IMGLYTiltshiftFilter
-        copy.textFilter = textFilter.copy(with: zone) as! IMGLYTextFilter
+        copy.textFilters = NSArray(array: textFilters, copyItems: true) as! [IMGLYTextFilter]
         copy.stickerFilters = NSArray(array: stickerFilters, copyItems: true) as! [CIFilter]
         return copy
     }
