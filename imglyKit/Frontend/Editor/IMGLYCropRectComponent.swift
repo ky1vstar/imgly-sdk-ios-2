@@ -69,7 +69,7 @@ open class IMGLYCropRectComponent {
     }
     
     fileprivate func setupAnchors() {
-        let anchorImage = UIImage(named: "crop_anchor", in: Bundle(for: type(of: self)), compatibleWith:nil)
+        let anchorImage = UIImage(named: "crop_anchor", in: Bundle.module, compatibleWith:nil)
         topLeftAnchor_ = createAnchorWithImage(anchorImage)
         topRightAnchor_ = createAnchorWithImage(anchorImage)
         bottomLeftAnchor_ = createAnchorWithImage(anchorImage)

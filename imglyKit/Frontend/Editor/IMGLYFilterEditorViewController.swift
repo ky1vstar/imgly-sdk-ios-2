@@ -15,7 +15,7 @@ open class IMGLYFilterEditorViewController: IMGLYSubEditorViewController {
     public let filterSelectionController = IMGLYFilterSelectionController()
     
     open fileprivate(set) lazy var filterIntensitySlider: UISlider = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.minimumValue = 0
@@ -41,7 +41,7 @@ open class IMGLYFilterEditorViewController: IMGLYSubEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("filter-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
         configureFilterSelectionController()

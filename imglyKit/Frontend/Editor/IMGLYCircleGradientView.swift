@@ -70,7 +70,7 @@ open class IMGLYCircleGradientView : UIView {
     }
     
     open func configureCrossImageView() {
-        crossImageView_.image = UIImage(named: "crosshair", in: Bundle(for: type(of: self)), compatibleWith:nil)
+        crossImageView_.image = UIImage(named: "crosshair", in: Bundle.module, compatibleWith:nil)
         crossImageView_.isUserInteractionEnabled = true
         crossImageView_.frame = CGRect(x: 0, y: 0, width: crossImageView_.image!.size.width, height: crossImageView_.image!.size.height)
         addSubview(crossImageView_)

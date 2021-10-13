@@ -22,7 +22,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
     // MARK: - Properties
     
     open fileprivate(set) lazy var freeRatioButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("crop-editor.free", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_crop_custom", in: bundle, compatibleWith: nil)
@@ -32,7 +32,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var oneToOneRatioButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("crop-editor.1-to-1", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_crop_square", in: bundle, compatibleWith: nil)
@@ -42,7 +42,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var fourToThreeRatioButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("crop-editor.4-to-3", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_crop_4-3", in: bundle, compatibleWith: nil)
@@ -52,7 +52,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var sixteenToNineRatioButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("crop-editor.16-to-9", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_crop_16-9", in: bundle, compatibleWith: nil)
@@ -91,7 +91,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("crop-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
         configureButtons()

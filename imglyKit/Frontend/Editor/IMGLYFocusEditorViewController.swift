@@ -13,7 +13,7 @@ open class IMGLYFocusEditorViewController: IMGLYSubEditorViewController {
     // MARK: - Properties
     
     open fileprivate(set) lazy var offButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("focus-editor.off", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_focus_off", in: bundle, compatibleWith: nil)
@@ -23,7 +23,7 @@ open class IMGLYFocusEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var linearButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("focus-editor.linear", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_focus_linear", in: bundle, compatibleWith: nil)
@@ -33,7 +33,7 @@ open class IMGLYFocusEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var radialButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("focus-editor.radial", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_focus_radial", in: bundle, compatibleWith: nil)
@@ -73,7 +73,7 @@ open class IMGLYFocusEditorViewController: IMGLYSubEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("focus-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
         configureButtons()

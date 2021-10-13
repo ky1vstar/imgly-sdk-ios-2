@@ -59,7 +59,7 @@ extension IMGLYFilterSelectionController {
             return
         }
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let filterType = IMGLYInstanceFactory.availableFilterList[indexPath.item]
         let filter = IMGLYInstanceFactory.effectFilterWithType(filterType)
         

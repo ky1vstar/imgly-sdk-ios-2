@@ -15,7 +15,7 @@ open class IMGLYSaturationEditorViewController: IMGLYSliderEditorViewController 
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("saturation-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
     }
     

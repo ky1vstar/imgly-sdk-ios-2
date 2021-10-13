@@ -76,7 +76,7 @@ open class IMGLYStickersEditorViewController: IMGLYSubEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("stickers-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
         configureStickersCollectionView()

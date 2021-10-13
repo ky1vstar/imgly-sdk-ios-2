@@ -29,7 +29,7 @@ open class IMGLYFontImporter {
     }
     
     fileprivate func importFontsWithExtension(_ ext: String) {
-        let paths = Bundle(for: type(of: self)).paths(forResourcesOfType: ext, inDirectory: nil)
+        let paths = Bundle.module.paths(forResourcesOfType: ext, inDirectory: nil)
         for fontPath in paths {
             let data: Data? = FileManager.default.contents(atPath: fontPath)
             var error: Unmanaged<CFError>?

@@ -16,7 +16,7 @@ import MobileCoreServices
     case video
     
     var bundle: Bundle {
-        return Bundle(for: IMGLYCameraViewController.self)
+        return Bundle.module
     }
     
     var titleForSelectionButton: String {

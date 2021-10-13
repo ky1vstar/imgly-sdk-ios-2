@@ -87,7 +87,7 @@ open class IMGLYCameraViewController: UIViewController {
         }()
     
     open fileprivate(set) lazy var flashButton: UIButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "flash_auto", in: bundle, compatibleWith: nil), for: [])
@@ -98,7 +98,7 @@ open class IMGLYCameraViewController: UIViewController {
         }()
     
     open fileprivate(set) lazy var switchCameraButton: UIButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "cam_switch", in: bundle, compatibleWith: nil), for: [])
@@ -109,7 +109,7 @@ open class IMGLYCameraViewController: UIViewController {
         }()
     
     open fileprivate(set) lazy var cameraRollButton: UIButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "nonePreview", in: bundle, compatibleWith: nil), for: [])
@@ -138,7 +138,7 @@ open class IMGLYCameraViewController: UIViewController {
     open fileprivate(set) var actionButton: UIControl?
     
     open fileprivate(set) lazy var filterSelectionButton: UIButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "show_filter", in: bundle, compatibleWith: nil), for: [])
@@ -150,7 +150,7 @@ open class IMGLYCameraViewController: UIViewController {
         }()
     
     open fileprivate(set) lazy var filterIntensitySlider: UISlider = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.minimumValue = 0
@@ -554,7 +554,7 @@ open class IMGLYCameraViewController: UIViewController {
     
     fileprivate func updateFlashButton() {
         if let cameraController = cameraController {
-            let bundle = Bundle(for: type(of: self))
+            let bundle = Bundle.module
 
             if currentRecordingMode == .photo {
                 flashButton.isHidden = !cameraController.flashAvailable
@@ -616,7 +616,7 @@ open class IMGLYCameraViewController: UIViewController {
             }) { success, error in
                 if let error = error {
                     DispatchQueue.main.async {
-                        let bundle = Bundle(for: type(of: self))
+                        let bundle = Bundle.module
                         
                         let alertController = UIAlertController(title: NSLocalizedString("camera-view-controller.error-saving-video.title", tableName: nil, bundle: bundle, value: "", comment: ""), message: error.localizedDescription, preferredStyle: .alert)
                         let cancelAction = UIAlertAction(title: NSLocalizedString("camera-view-controller.error-saving-video.cancel", tableName: nil, bundle: bundle, value: "", comment: ""), style: .cancel, handler: nil)
@@ -814,7 +814,7 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
     
     public func cameraControllerDidFailAuthorization(_ cameraController: IMGLYCameraController) {
         DispatchQueue.main.async {
-            let bundle = Bundle(for: type(of: self))
+            let bundle = Bundle.module
 
             let alertController = UIAlertController(title: NSLocalizedString("camera-view-controller.camera-no-permission.title", tableName: nil, bundle: bundle, value: "", comment: ""), message: NSLocalizedString("camera-view-controller.camera-no-permission.message", tableName: nil, bundle: bundle, value: "", comment: ""), preferredStyle: .alert)
             

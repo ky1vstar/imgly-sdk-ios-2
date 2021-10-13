@@ -13,7 +13,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
     // MARK: - Properties
     
     open fileprivate(set) lazy var rotateLeftButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("orientation-editor.rotate-left", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_orientation_rotate-l", in: bundle, compatibleWith: nil)
@@ -23,7 +23,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var rotateRightButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("orientation-editor.rotate-right", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_orientation_rotate-r", in: bundle, compatibleWith: nil)
@@ -33,7 +33,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var flipHorizontallyButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("orientation-editor.flip-horizontally", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_orientation_flip-h", in: bundle, compatibleWith: nil)
@@ -43,7 +43,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
         }()
     
     open fileprivate(set) lazy var flipVerticallyButton: IMGLYImageCaptionButton = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         let button = IMGLYImageCaptionButton()
         button.textLabel.text = NSLocalizedString("orientation-editor.flip-vertically", tableName: nil, bundle: bundle, value: "", comment: "")
         button.imageView.image = UIImage(named: "icon_orientation_flip-v", in: bundle, compatibleWith: nil)
@@ -69,7 +69,7 @@ open class IMGLYOrientationEditorViewController: IMGLYSubEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("orientation-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         
         configureButtons()

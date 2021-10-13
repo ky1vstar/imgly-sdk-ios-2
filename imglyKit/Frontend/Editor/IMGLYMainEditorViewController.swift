@@ -38,7 +38,7 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
     // MARK: - Properties
     
     open lazy var actionButtons: [IMGLYActionButton] = {
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         var handlers = [IMGLYActionButton]()
         
         handlers.append(
@@ -123,7 +123,7 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("main-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(IMGLYMainEditorViewController.cancelTapped(_:)))
         

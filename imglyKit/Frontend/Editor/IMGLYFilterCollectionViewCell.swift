@@ -24,7 +24,7 @@ class IMGLYFilterCollectionViewCell: IMGLYImageCaptionCollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .center
         imageView.alpha = 0
-        imageView.image = UIImage(named: "icon_tick", in: Bundle(for: type(of: self)), compatibleWith:nil)
+        imageView.image = UIImage(named: "icon_tick", in: Bundle.module, compatibleWith:nil)
         return imageView
     }()
     

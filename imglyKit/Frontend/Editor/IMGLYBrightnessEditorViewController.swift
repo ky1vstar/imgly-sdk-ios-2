@@ -15,7 +15,7 @@ open class IMGLYBrightnessEditorViewController: IMGLYSliderEditorViewController 
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        let bundle = Bundle(for: type(of: self))
+        let bundle = Bundle.module
         navigationItem.title = NSLocalizedString("brightness-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
     }
     
