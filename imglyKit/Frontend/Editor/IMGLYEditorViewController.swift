@@ -60,6 +60,7 @@ open class IMGLYEditorViewController: UIViewController {
         configureNavigationItems()
         configureViewHierarchy()
         configureViewConstraints()
+        self.navigationController?.navigationBar.tintColor = .black
     }
     
     open override var preferredStatusBarStyle : UIStatusBarStyle {

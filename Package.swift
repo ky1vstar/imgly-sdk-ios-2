@@ -20,8 +20,13 @@ let package = Package(
             name: "imglyKit",
             dependencies: ["imglyKit-ObjC"],
             path: "imglyKit",
-            exclude: Exclude.resolved(),
-            resources: Resource.resolved()
+            exclude: [
+                "Supporting Files",
+                "Backend/Processing/ObjC"
+            ],
+            resources: [
+                .process("Resources")
+            ]
         ),
         .target(
             name: "imglyKit-ObjC",
@@ -30,34 +35,3 @@ let package = Package(
         )
     ]
 )
-
-private enum Exclude {
-    static func common() -> [String] {
-        [
-            "Supporting Files",
-            "Backend/Processing/ObjC"
-        ]
-    }
-    
-    static func platform() -> [String] {
-        return []
-    }
-    
-    static func resolved() -> [String] {
-        common() + platform()
-    }
-}
-
-private extension Resource {
-    static func common() -> [Self] {
-        [
-            .process("Backend/Filter Responses"),
-            .process("Backend/Fonts"),
-            .process("Resources")
-        ]
-    }
-    
-    static func resolved() -> [Self] {
-        common()
-    }
-}

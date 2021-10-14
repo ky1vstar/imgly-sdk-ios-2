@@ -28,7 +28,7 @@ static NSData *identityLUT;
 
 @implementation LUTToNSDataConverter
 
-+ (nullable NSData *)colorCubeDataFromLUTNamed:(nonnull NSString *)name interpolatedWithIdentityLUTNamed:(nonnull NSString *)identityName withIntensity:(float)intensity cacheIdentityLUT:(BOOL)shouldCache {
++ (nullable NSData *)colorCubeDataFromLUTNamed:(nonnull NSString *)name interpolatedWithIdentityLUTNamed:(nonnull NSString *)identityName withIntensity:(float)intensity cacheIdentityLUT:(BOOL)shouldCache inBundle:(nonnull NSBundle *)bundle {
     if (intensity < 0 || intensity > 1) {
         return nil;
     }
@@ -36,19 +36,19 @@ static NSData *identityLUT;
     NSData *interpolatedLUT;
     
     @autoreleasepool {
-        NSData *lut = [self colorCubeDataFromLUT:name];
+        NSData *lut = [self colorCubeDataFromLUT:name bundle:bundle];
         if (!lut) {
             return nil;
         }
         
         NSData *identity;
         if (!shouldCache) {
-            identity = [self colorCubeDataFromLUT:identityName];
+            identity = [self colorCubeDataFromLUT:identityName bundle:bundle];
         } else {
             if (identityLUT != nil) {
                 identity = identityLUT;
             } else {
-                identityLUT = [self colorCubeDataFromLUT:identityName];
+                identityLUT = [self colorCubeDataFromLUT:identityName bundle:bundle];
                 identity = identityLUT;
             }
         }
@@ -86,11 +86,10 @@ static NSData *identityLUT;
  The resulting data can be used to feed an CIColorCube filter, so that the transformation
  realised by the LUT is applied with a core image standard filter
  */
-+ (nullable NSData *)colorCubeDataFromLUT:(nonnull NSString *)name {
++ (nullable NSData *)colorCubeDataFromLUT:(nonnull NSString *)name bundle:(nonnull NSBundle *)bundle {
     #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-    UIImage *image = [UIImage imageNamed:name inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil];
+    UIImage *image = [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
     #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
-    NSBundle *bundle = [NSBundle bundleForClass:self.class];
     NSImage *image = [bundle imageForResource:name];
     image.name = name;
     #endif

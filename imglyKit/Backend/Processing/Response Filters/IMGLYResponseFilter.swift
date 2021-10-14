@@ -49,7 +49,7 @@ open class IMGLYResponseFilter: CIFilter, IMGLYFilterTypeProtocol {
     fileprivate var colorCubeData: Data? {
         get {
             if _colorCubeData == nil {
-                _colorCubeData = LUTToNSDataConverter.colorCubeData(fromLUTNamed: self.responseName, interpolatedWithIdentityLUTNamed: "Identity", withIntensity: self.inputIntensity.floatValue, cacheIdentityLUT: true)
+                _colorCubeData = LUTToNSDataConverter.colorCubeData(fromLUTNamed: self.responseName, interpolatedWithIdentityLUTNamed: "Identity", withIntensity: self.inputIntensity.floatValue, cacheIdentityLUT: true, in: Bundle.module)
             }
             
             return _colorCubeData

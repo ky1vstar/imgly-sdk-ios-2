@@ -37,8 +37,8 @@ open class IMGLYStickersDataSource: NSObject, IMGLYStickersDataSourceDelegate {
         ]
         
         stickers = stickerFiles.map { (file: String) -> IMGLYSticker? in
-            if let image = UIImage(named: file, in: Bundle(for: IMGLYStickersDataSource.self), compatibleWith: nil) {
-                let thumbnail = UIImage(named: file + "_thumbnail", in: Bundle(for: IMGLYStickersDataSource.self), compatibleWith: nil)
+            if let image = UIImage(named: file, in: Bundle.module, compatibleWith: nil) {
+                let thumbnail = UIImage(named: file + "_thumbnail", in: Bundle.module, compatibleWith: nil)
                 return IMGLYSticker(image: image, thumbnail: thumbnail)
             }
             
