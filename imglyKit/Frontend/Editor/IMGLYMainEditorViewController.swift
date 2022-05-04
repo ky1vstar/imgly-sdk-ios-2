@@ -151,7 +151,7 @@ open class IMGLYMainEditorViewController: IMGLYEditorViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(IMGLYButtonCollectionViewCell.self, forCellWithReuseIdentifier: ButtonCollectionViewCellReuseIdentifier)
-        
+        collectionView.backgroundColor = .black
         let views = [ "collectionView" : collectionView ]
         bottomContainerView.addSubview(collectionView)
         bottomContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: nil, views: views))
@@ -270,7 +270,7 @@ extension IMGLYMainEditorViewController: UICollectionViewDataSource {
             } else {
                 buttonCell.imageView.image = actionButton.image
             }
-            
+            buttonCell.imageView.tintColor = .white
             buttonCell.textLabel.text = actionButton.title
         }
         

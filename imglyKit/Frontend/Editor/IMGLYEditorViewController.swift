@@ -60,7 +60,6 @@ open class IMGLYEditorViewController: UIViewController {
         configureNavigationItems()
         configureViewHierarchy()
         configureViewConstraints()
-        self.navigationController?.navigationBar.tintColor = .black
     }
     
     open override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -83,6 +82,8 @@ open class IMGLYEditorViewController: UIViewController {
     
     fileprivate func configureNavigationItems() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(IMGLYEditorViewController.tappedDone(_:)))
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
     }
     
     fileprivate func configureViewHierarchy() {
