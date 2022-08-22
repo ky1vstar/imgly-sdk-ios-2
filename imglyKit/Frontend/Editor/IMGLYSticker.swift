@@ -14,11 +14,13 @@ open class IMGLYSticker: NSObject {
     public let image: UIImage?
     public let dataGif: Data?
     public var resultImage: UIImage?
+    public var tags: [String]?
     
-    public init(image: UIImage? = nil, dataGif: Data? = nil) {
+    public init(image: UIImage? = nil, dataGif: Data? = nil, tags: [String]?) {
         self.image = image
         self.dataGif = dataGif
         self.resultImage = image
+        self.tags = tags
         super.init()
     }
     
