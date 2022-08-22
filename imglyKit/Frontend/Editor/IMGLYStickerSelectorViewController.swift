@@ -20,6 +20,8 @@ class IMGLYStickerSelectorViewController: UIViewController {
     
     // MARK: - Properties
     open var stickersDataSource = IMGLYStickersDataSource()
+    private var searchBar: UISearchBar?
+    private var collectionView: UICollectionView?
     let StickersCollectionViewTag = 99
     
     open weak var delegate: IMGLYStickerSelectorViewDelegate?
@@ -58,17 +60,30 @@ class IMGLYStickerSelectorViewController: UIViewController {
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 10
         
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.tag = StickersCollectionViewTag
-        collectionView.dataSource = stickersDataSource
-        collectionView.delegate = self
-        collectionView.backgroundColor = .clear
-        collectionView.register(IMGLYStickerCollectionViewCell.self, forCellWithReuseIdentifier: StickersCollectionViewCellReuseIdentifier)
-        view.addSubview(collectionView)
+        searchBar = UISearchBar()
+        searchBar?.translatesAutoresizingMaskIntoConstraints = false
+        searchBar?.searchBarStyle = .default
+        searchBar?.placeholder = " Search..."
+        searchBar?.backgroundImage = UIImage()
+        searchBar?.isTranslucent = true
+        searchBar?.alpha = 1
+        searchBar?.barTintColor = .clear
+        searchBar?.delegate = self
+        
+        self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        collectionView?.tag = StickersCollectionViewTag
+        collectionView?.dataSource = stickersDataSource
+        collectionView?.delegate = self
+        collectionView?.backgroundColor = .clear
+        collectionView?.register(IMGLYStickerCollectionViewCell.self, forCellWithReuseIdentifier: StickersCollectionViewCellReuseIdentifier)
+        view.addSubview(collectionView ?? UIView())
+        view.addSubview(searchBar ?? UIView())
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        let views: [String : AnyObject] = ["collectionView" : collectionView, "slideIdicator" : slideIdicator]
+        let views: [String : Any] = ["collectionView": collectionView,
+                                     "slideIdicator": slideIdicator,
+                                     "searchBar": searchBar ?? UIView()]
         let metrics: [String : AnyObject] = [
             "slideIdicatorWidht" : 60 as AnyObject,
             "slideIdicatorHeight" : 4 as AnyObject,
@@ -76,10 +91,11 @@ class IMGLYStickerSelectorViewController: UIViewController {
         ]
         
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[collectionView]|", options: [], metrics: metrics, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "|[searchBar]|", options: [], metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[slideIdicator(==slideIdicatorWidht)]", options: NSLayoutConstraint.FormatOptions(rawValue: 0), metrics: metrics, views: views))
            
         slideIdicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(==topMargin)-[slideIdicator(==slideIdicatorHeight)]-(==topMargin)-[collectionView]-|", options: [], metrics: metrics, views: views))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(==topMargin)-[slideIdicator(==slideIdicatorHeight)]-[searchBar]-[collectionView]-|", options: [], metrics: metrics, views: views))
     }
     
     override func viewDidLayoutSubviews() {
@@ -116,6 +132,17 @@ extension IMGLYStickerSelectorViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sticker = stickersDataSource.stickers[indexPath.row]
         self.delegate?.didSelectSticker(sticker)
+    }
+}
+
+extension IMGLYStickerSelectorViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.stickersDataSource.updateDataSource(term: searchText)
+        self.collectionView?.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 

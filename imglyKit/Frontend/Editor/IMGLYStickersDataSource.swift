@@ -9,22 +9,32 @@
 import UIKit
 import Gifu
 
-public protocol IMGLYStickersDataSourceDelegate: class, UICollectionViewDataSource {
+public protocol IMGLYStickersDataSourceDelegate: AnyObject, UICollectionViewDataSource {
     var stickers: [IMGLYSticker] { get }
 }
 
 open class IMGLYStickersDataSource: NSObject, IMGLYStickersDataSourceDelegate {
-    public let stickers: [IMGLYSticker]
+    public var stickers: [IMGLYSticker]
+    public let allStickers: [IMGLYSticker]
     
     override init() {
         stickers = IMGLYStrickersManager.shared.dataArray.filter { $0 != nil }.map { $0! }
-        
+        self.allStickers = stickers
         super.init()
     }
     
     public init(stickers: [IMGLYSticker]) {
         self.stickers = stickers
+        self.allStickers = stickers
         super.init()
+    }
+    
+    func updateDataSource(term: String) {
+        if term.count > 0 {
+            self.stickers = self.allStickers.filter({ ($0.tags?.filter { $0.contains(term.lowercased()) }.count ?? 1) > 0 })
+            return
+        }
+        self.stickers = self.allStickers
     }
     
     open func numberOfSections(in collectionView: UICollectionView) -> Int {

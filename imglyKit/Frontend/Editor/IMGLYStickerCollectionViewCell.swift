@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Gifu
+
 
 class IMGLYStickerCollectionViewCell: UICollectionViewCell {
 
